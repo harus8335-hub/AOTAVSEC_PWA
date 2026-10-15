@@ -154,10 +154,15 @@
                             <div class="flex justify-between items-center mb-1">
                                 <label class="block text-xs font-medium text-slate-600">อัตรา OT / ชม. (บาท)</label>
                                 <label class="cursor-pointer flex items-center gap-1.5 text-xs text-blue-600 font-medium">
-                                    <input type="checkbox" id="autoOtToggle" checked onchange="app.toggleAutoOt()" class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"> คำนวณอัตโนมัติ (รายรับรายวัน/8)
+                                    <input type="checkbox" id="autoOtToggle" checked onchange="app.toggleAutoOt()" class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5"> คำนวณอัตโนมัติ
                                 </label>
                             </div>
-                            <input type="number" id="otRate" min="0" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <label for="otRateMode" class="block text-[11px] text-slate-500 mb-1">ฐานคำนวณอัตรา OT</label>
+                            <select id="otRateMode" class="w-full mb-2 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                <option value="daily8" selected>รายรับรายวัน ÷ 8 (สูตรเดิม)</option>
+                                <option value="monthly240">เงินเดือนฐาน ÷ 240 (30 × 8 ชม.)</option>
+                            </select>
+                            <input type="number" id="otRate" min="0" step="0.01" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">จำนวนชั่วโมง OT ที่ทำได้ (ชม.)</label>
@@ -250,6 +255,7 @@
                     <h3 class="text-base font-semibold text-slate-900 mb-3 flex items-center gap-2"><i class="fa-solid fa-list-check text-indigo-600"></i> รายละเอียดสูตรคำนวณ</h3>
                     <div id="calcBreakdown" class="text-sm space-y-2 text-slate-600" aria-live="polite"></div>
                     <p class="text-[11px] text-amber-700 bg-amber-50 border border-amber-100 rounded-lg p-3 mt-3">หมายเหตุ: ตัวคูณ OT ต้องเลือกให้ตรงกับประเภทวันทำงานและข้อกำหนดการจ้างจริง ระบบไม่ได้ยืนยันแทนบริษัทหรือฝ่ายเงินเดือน</p>
+                    <div id="calcWarnings" class="mt-3 space-y-2" aria-live="polite"></div>
                 </div>
 
                 <!-- Breakdown Visual / Chart -->
@@ -389,6 +395,7 @@
                     <button onclick="app.exportSalaryCsv()" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-csv mr-1"></i> ส่งออกประวัติเงินเดือน CSV</button>
                     <button onclick="app.exportWorkbook()" class="bg-slate-800 hover:bg-slate-900 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-excel mr-1"></i> สร้างไฟล์ Excel</button>
                     <button onclick="app.exportBackupJson()" class="bg-violet-600 hover:bg-violet-700 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-shield-halved mr-1"></i> สำรองข้อมูล JSON</button>
+                    <button onclick="app.exportCalculationAuditCsv()" class="bg-cyan-700 hover:bg-cyan-800 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-list-check mr-1"></i> ส่งออกตรวจสอบสูตร CSV</button>
                     <button onclick="document.getElementById('backupImportFile').click()" class="bg-slate-600 hover:bg-slate-700 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-import mr-1"></i> กู้คืน / นำเข้าข้อมูล</button>
                     <input type="file" id="backupImportFile" accept="application/json,.json" class="hidden" onchange="app.importBackupJson(this.files && this.files[0])">
                 </div>
@@ -703,6 +710,8 @@
 
                 const otMultiplier = document.getElementById('otMultiplier');
                 if (otMultiplier) otMultiplier.addEventListener('change', () => { this.calculate(); this.scheduleCalculatorStateSave(); });
+                const otRateMode = document.getElementById('otRateMode');
+                if (otRateMode) otRateMode.addEventListener('change', () => { this.calculate(); this.scheduleCalculatorStateSave(); });
 
                 document.getElementById('tax').addEventListener('input', () => {
                     const autoToggle = document.getElementById('autoTaxToggle');
@@ -720,7 +729,7 @@
             }
 
             getCalculatorState() {
-                const ids = ['empName','empPosition','payPeriod','workDays','baseSalary','dailyIncomeRate','shiftAllowance','commission','allowance','otherIncome','autoOtToggle','otRate','otHours','otMultiplier','socialSecurity','autoTaxToggle','tax','absence','otherDeduction'];
+                const ids = ['empName','empPosition','payPeriod','workDays','baseSalary','dailyIncomeRate','shiftAllowance','commission','allowance','otherIncome','autoOtToggle','otRateMode','otRate','otHours','otMultiplier','socialSecurity','autoTaxToggle','tax','absence','otherDeduction'];
                 const state = {};
                 ids.forEach(id => {
                     const el = document.getElementById(id);
@@ -800,6 +809,7 @@
                     allowance: parseFloat(document.getElementById('allowance').value) || 0,
                     otherIncome: parseFloat(document.getElementById('otherIncome').value) || 0,
                     autoOt: document.getElementById('autoOtToggle').checked,
+                    otRateMode: document.getElementById('otRateMode') ? document.getElementById('otRateMode').value : 'daily8',
                     manualOtRate: parseFloat(document.getElementById('otRate').value) || 0,
                     otHours: Math.max(0, parseFloat(document.getElementById('otHours').value) || 0),
                     otMultiplier: Math.max(0, parseFloat(document.getElementById('otMultiplier').value) || 1),
@@ -830,18 +840,22 @@
                 if (socialSecurityCapLabel) socialSecurityCapLabel.textContent = `5% สูงสุด ${this.formatNumber(socialSecurityCeiling * 0.05)} บาท`;
                 v.socialSecurity = socialSecurity;
 
-                // OT Rate Calculation: Exactly dailyIncomeRate / 8
+                // OT rate: keep the legacy daily/8 formula as default; monthly/240 is an optional profile.
                 let otRate = 0;
                 const otRateInput = document.getElementById('otRate');
+                const otRateMode = document.getElementById('otRateMode');
                 if (v.autoOt) {
-                    otRate = v.dailyIncomeRate > 0 ? (v.dailyIncomeRate / 8) : 0;
+                    const mode = v.otRateMode || 'daily8';
+                    otRate = mode === 'monthly240' ? (v.baseSalary > 0 ? v.baseSalary / 240 : 0) : (v.dailyIncomeRate > 0 ? v.dailyIncomeRate / 8 : 0);
                     otRateInput.value = otRate.toFixed(2);
+                    if (otRateMode) otRateMode.disabled = false;
                     otRateInput.setAttribute('readonly', true);
                     otRateInput.classList.add('bg-slate-100', 'text-slate-500');
                 } else {
                     otRateInput.removeAttribute('readonly');
                     otRateInput.classList.remove('bg-slate-100', 'text-slate-500');
                     otRate = v.manualOtRate;
+                    if (otRateMode) otRateMode.disabled = true;
                 }
 
                 const otPay = otRate * v.otMultiplier * v.otHours;
@@ -875,7 +889,7 @@
                     const contributionYearText = contributionYear + 543;
                     breakdown.innerHTML = `
                       <div class="flex justify-between gap-4"><span>รายรับรายวัน</span><span class="text-right font-medium text-slate-800">${this.formatNumber(v.dailyIncomeRate)} × ${this.formatNumber(v.workDays)} = ${this.formatNumber(totalDailyIncome)} บาท</span></div>
-                      <div class="flex justify-between gap-4"><span>อัตรา OT ต่อชั่วโมง</span><span class="text-right font-medium text-slate-800">${this.formatNumber(otRate)} × ${v.otMultiplier} เท่า</span></div>
+                      <div class="flex justify-between gap-4"><span>อัตรา OT ต่อชั่วโมง (${v.autoOt ? ((v.otRateMode || 'daily8') === 'monthly240' ? 'เงินเดือนฐาน ÷ 240' : 'รายรับรายวัน ÷ 8') : 'กรอกเอง'})</span><span class="text-right font-medium text-slate-800">${this.formatNumber(otRate)} × ${v.otMultiplier} เท่า</span></div>
                       <div class="flex justify-between gap-4"><span>ค่าล่วงเวลา</span><span class="text-right font-medium text-slate-800">${this.formatNumber(otRate)} × ${v.otMultiplier} × ${this.formatNumber(v.otHours)} = ${this.formatNumber(otPay)} บาท</span></div>
                       <div class="flex justify-between gap-4"><span>ฐานค่าจ้างประกันสังคมที่ระบบใช้</span><span class="text-right font-medium text-slate-800">${this.formatNumber(contributionWage)} บาท</span></div>
                       <div class="flex justify-between gap-4"><span>ประกันสังคม (${contributionYearText}, 5%)</span><span class="text-right font-medium text-slate-800">${this.formatNumber(socialSecurity)} บาท</span></div>
@@ -883,7 +897,20 @@
                       <div class="border-t border-slate-200 pt-2 flex justify-between gap-4 font-semibold"><span>เงินสุทธิ</span><span class="text-right text-emerald-700">${this.formatNumber(netSalary)} บาท</span></div>`;
                 }
 
-                return { v, otRate, otPay, totalDailyIncome, totalIncome, tax, totalDeduction, netSalary, contributionWage, socialSecurityCeiling, contributionYear };
+                // Practical pre-save checks: warnings only; never silently change the user's entered values.
+                const warnings = [];
+                if (!v.period || v.period === '-') warnings.push('ยังไม่ได้ระบุงวดเงินเดือน');
+                if (v.otHours > 60) warnings.push('ชั่วโมง OT มากกว่า 60 ชั่วโมงต่อเดือน โปรดตรวจสอบกับบันทึกเวลาทำงาน');
+                if (v.workDays > 31) warnings.push('จำนวนวันทำงานมากกว่า 31 วัน โปรดตรวจสอบข้อมูล');
+                if (v.otHours > 0 && otRate <= 0) warnings.push('มีชั่วโมง OT แต่ยังไม่มีอัตรา OT ที่ใช้คำนวณ');
+                if (v.baseSalary > 0 && v.dailyIncomeRate > 0) warnings.push('มีทั้งเงินเดือนฐานและรายรับรายวัน ระบบนำมารวมกันทั้งสองรายการ โปรดตรวจสอบว่าไม่ใช่การกรอกค่าซ้ำ');
+                if (v.autoTax) warnings.push('ภาษีอัตโนมัติ 2% เป็นค่าประมาณตามสูตรในแอป ไม่ใช่การคำนวณภาษีเงินได้บุคคลธรรมดาตามกฎหมาย');
+                const warningBox = document.getElementById('calcWarnings');
+                if (warningBox) warningBox.innerHTML = warnings.length
+                    ? warnings.map(message => `<div class="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${this.escapeHtml(message)}</div>`).join('')
+                    : '<div class="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800"><i class="fa-solid fa-circle-check mr-1"></i>ไม่พบข้อสังเกตจากการตรวจสอบเบื้องต้น</div>';
+
+                return { v, otRate, otPay, totalDailyIncome, totalIncome, tax, totalDeduction, netSalary, contributionWage, socialSecurityCeiling, contributionYear, warnings };
             }
 
             formatNumber(num) {
@@ -1205,6 +1232,7 @@
                     date: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }),
                     ...data.v,
                     otRate: data.otRate,
+                    otRateMode: data.v.otRateMode || 'daily8',
                     otMultiplier: data.v.otMultiplier || 1,
                     otPay: data.otPay,
                     contributionWage: data.contributionWage,
@@ -1341,6 +1369,21 @@
                     if (result && result.url) window.open(result.url, '_blank');
                     else alert('สร้างไฟล์แล้ว แต่ไม่พบลิงก์ดาวน์โหลด');
                 } catch (e) { this.setSyncStatus('ส่งออก Excel ไม่สำเร็จ', 'error'); alert('ส่งออก Excel ไม่สำเร็จ: ' + e.message); }
+            }
+
+            exportCalculationAuditCsv() {
+                const rows = [['รหัส','วันที่บันทึก','พนักงาน','ตำแหน่ง','งวด','เงินเดือนฐาน','รายรับรายวัน','วันทำงาน','รายรับรายวันรวม','โหมด OT','อัตรา OT/ชม.','ตัวคูณ OT','ชั่วโมง OT','ค่าล่วงเวลา','ฐานประกันสังคม','ปีฐานประกันสังคม','เพดานฐานค่าจ้าง','ประกันสังคม','ภาษีตามสูตรแอป','รายรับรวม','รายการหักรวม','เงินสุทธิ']];
+                (this.salaryHistory || []).forEach(r => rows.push([
+                    r.id || '', r.date || '', r.name || '', r.position || '', r.period || '',
+                    Number(r.baseSalary)||0, Number(r.dailyIncomeRate)||0, Number(r.workDays)||0,
+                    Number(r.dailyIncomeRate||0)*Number(r.workDays||0),
+                    r.otRateMode === 'monthly240' ? 'เงินเดือนฐาน/240' : (r.autoOt === false ? 'กรอกอัตราเอง' : 'รายรับรายวัน/8'),
+                    Number(r.otRate || r.manualOtRate)||0, Number(r.otMultiplier)||1, Number(r.otHours)||0,
+                    Number(r.otPay)||0, Number(r.contributionWage)||0, Number(r.contributionYear)||'',
+                    Number(r.socialSecurityCeiling)||0, Number(r.socialSecurity)||0, Number(r.tax)||0,
+                    Number(r.totalIncome)||0, Number(r.totalDeduction)||0, Number(r.netSalary)||0
+                ]));
+                this.downloadCsv('AOTAVSEC_Calculation_Audit.csv', rows);
             }
 
             exportBackupJson() {
