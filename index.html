@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1d4ed8">
-    <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v2.4 Phase 3">
+    <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v3.0 Phase 5">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
-    <title>ระบบคำนวณเงินเดือนและลงเวลาทำงาน (Salary & Attendance Pro)</title>
+    <title>AOTAVSEC Salary Calculator v3.0</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
@@ -36,7 +36,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Salary & Attendance Pro</h1>
-                    <p class="text-xs sm:text-sm text-blue-100">ระบบคำนวณเงินเดือน ลงเวลาทำงาน ค่าเข้ากะ และออกสลิปเงินเดือน</p>
+                    <p class="text-xs sm:text-sm text-blue-100">ระบบคำนวณเงินเดือน ลงเวลาทำงาน ค่าเข้ากะ และออกสลิปเงินเดือน · v3.0</p>
                 </div>
             </div>
             <div class="flex items-center flex-wrap gap-2">
@@ -387,6 +387,11 @@
                     </button>
                 </div>
 
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                    <div><label for="historySearch" class="block text-xs text-slate-600 mb-1">ค้นหาชื่อ / ตำแหน่ง / งวดเดือน</label><input id="historySearch" type="search" placeholder="พิมพ์คำค้นหา…" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm" /></div>
+                    <div><label for="historyStatusFilter" class="block text-xs text-slate-600 mb-1">สถานะสลิป</label><select id="historyStatusFilter" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm"><option value="all">ทุกสถานะ</option><option value="estimated">ประมาณการ</option><option value="confirmed">ยืนยันแล้ว</option></select></div>
+                    <div class="flex items-end justify-between gap-2"><p id="historyResultCount" class="text-xs text-slate-500 pb-2">0 รายการ</p><button onclick="app.resetHistoryFilters()" class="border border-slate-300 hover:bg-slate-50 rounded-xl px-3 py-2 text-xs">ล้างตัวกรอง</button></div>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -426,7 +431,41 @@
                     <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4"><div class="text-xs text-indigo-700">ค่าเข้ากะ</div><div id="reportShift" class="text-2xl font-bold text-indigo-800 mt-1">0 ฿</div></div>
                     <div class="bg-slate-100 border border-slate-200 rounded-2xl p-4"><div class="text-xs text-slate-600">สลิปที่บันทึก</div><div id="reportSlips" class="text-2xl font-bold text-slate-800 mt-1">0</div></div>
                 </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                    <div class="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+                        <h3 class="font-semibold text-blue-900 mb-2">เปรียบเทียบรายได้กับเดือนก่อน</h3>
+                        <div class="grid grid-cols-3 gap-2 text-sm">
+                            <div><div class="text-xs text-blue-700">รายรับรวม</div><div id="compareIncome" class="font-bold text-blue-900">-</div></div>
+                            <div><div class="text-xs text-blue-700">เงินสุทธิ</div><div id="compareNet" class="font-bold text-blue-900">-</div></div>
+                            <div><div class="text-xs text-blue-700">เปลี่ยนแปลงสุทธิ</div><div id="compareDelta" class="font-bold text-blue-900">-</div></div>
+                        </div>
+                        <p id="compareCaption" class="text-xs text-blue-700 mt-2">เปรียบเทียบจากสลิปที่บันทึกไว้</p>
+                    </div>
+                    <div class="rounded-2xl border border-violet-100 bg-violet-50 p-4">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-2"><h3 class="font-semibold text-violet-900">สรุปรายปี</h3><label class="text-xs text-violet-800">ปี <select id="reportYear" class="border border-violet-200 rounded-lg px-2 py-1 bg-white"></select></label></div>
+                        <div class="grid grid-cols-3 gap-2 text-sm">
+                            <div><div class="text-xs text-violet-700">รายรับรวม</div><div id="annualIncome" class="font-bold text-violet-900">0.00</div></div>
+                            <div><div class="text-xs text-violet-700">รายการหัก</div><div id="annualDeduction" class="font-bold text-violet-900">0.00</div></div>
+                            <div><div class="text-xs text-violet-700">เงินสุทธิ</div><div id="annualNet" class="font-bold text-violet-900">0.00</div></div>
+                        </div>
+                        <p id="annualCaption" class="text-xs text-violet-700 mt-2">รวมจากสลิปที่บันทึกไว้</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                    <div class="rounded-2xl border border-sky-100 bg-sky-50 p-4">
+                        <h3 class="font-semibold text-sky-900 mb-1">แนวโน้มรายได้ 6 เดือนล่าสุด</h3>
+                        <p class="text-xs text-sky-700 mb-3">กราฟจากสลิปที่บันทึกไว้ · แท่งสีเข้มคือรายรับรวม แท่งสีอ่อนคือเงินสุทธิ</p>
+                        <div id="salaryTrendChart" class="space-y-3" aria-live="polite"><p class="text-sm text-slate-500">กำลังเตรียมกราฟ…</p></div>
+                    </div>
+                    <div class="rounded-2xl border border-amber-100 bg-amber-50 p-4">
+                        <div class="flex flex-wrap justify-between gap-2 items-center"><h3 class="font-semibold text-amber-900">ตรวจสอบคุณภาพข้อมูล</h3><button onclick="app.exportDataQualityCsv()" class="text-xs border border-amber-300 rounded-lg px-2 py-1 hover:bg-amber-100">ส่งออกรายงานตรวจสอบ CSV</button></div>
+                        <p class="text-xs text-amber-800 mt-1 mb-3">ตรวจหาสลิปงวดซ้ำ ยอดเงินไม่สัมพันธ์กัน และข้อมูลสำคัญที่ขาดหาย โดยไม่แก้ไขข้อมูลอัตโนมัติ</p>
+                        <div id="dataQualitySummary" class="space-y-2"><p class="text-sm text-slate-500">กำลังตรวจสอบ…</p></div>
+                    </div>
+                </div>
                 <div class="flex flex-wrap gap-2 mb-6">
+                    <button onclick="app.exportMonthlyPayslipsPdf()" class="bg-rose-600 hover:bg-rose-700 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-pdf mr-1"></i> พิมพ์ / บันทึก PDF รายเดือน</button>
+                    <button onclick="app.exportAnnualCsv()" class="bg-violet-700 hover:bg-violet-800 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-csv mr-1"></i> ส่งออกรายงานรายปี CSV</button>
                     <button onclick="app.exportAttendanceCsv()" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-csv mr-1"></i> ส่งออกลงเวลา CSV</button>
                     <button onclick="app.exportSalaryCsv()" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-csv mr-1"></i> ส่งออกประวัติเงินเดือน CSV</button>
                     <button onclick="app.exportWorkbook()" class="bg-slate-800 hover:bg-slate-900 text-white rounded-xl px-4 py-2 text-sm font-semibold"><i class="fa-solid fa-file-excel mr-1"></i> สร้างไฟล์ Excel</button>
@@ -699,6 +738,7 @@
                 this.renderHistory();
                 const reportMonth = document.getElementById('reportMonth');
                 if (reportMonth) reportMonth.value = `${this.currentDate.getFullYear()}-${String(this.currentDate.getMonth()+1).padStart(2,'0')}`;
+                this.populateReportYears();
                 this.loadFromDatabase();
                 window.addEventListener('online', async () => { this.offlineMode = false; if (this.remoteEnabled) { await this.loadFromDatabase(); } else this.setSyncStatus('ออนไลน์แล้ว แต่แอปนี้ยังไม่เชื่อม Google Sheets — ใช้สำรอง JSON เพื่อย้ายข้อมูล', 'info'); });
                 window.addEventListener('offline', () => { this.offlineMode = true; this.setSyncStatus('ออฟไลน์ — บันทึกในอุปกรณ์นี้', 'error'); });
@@ -902,7 +942,7 @@
                     localStorage.setItem('salary_attendance', JSON.stringify(this.attendanceData));
                     localStorage.setItem('salary_history', JSON.stringify(this.salaryHistory));
                     localStorage.setItem('salary_calculator_state', JSON.stringify(this.getCalculatorState()));
-                    this.calculate(); this.renderCalendar(); this.renderHistory(); this.renderReport();
+                    this.populateReportYears(); this.calculate(); this.renderCalendar(); this.renderHistory(); this.renderReport();
                     if (this.pendingSync.length) this.setSyncStatus(`เชื่อมต่อแล้ว · รอซิงก์ ${this.pendingSync.length} รายการ`, 'error');
                     else if (conflictCount || this.syncConflicts.length) this.setSyncStatus(`ซิงก์แล้ว · พบข้อมูลชนกัน ${this.syncConflicts.length} รายการ (ใช้ข้อมูลในเครื่อง)`, 'info');
                     else this.setSyncStatus('เชื่อมต่อ Google Sheets แล้ว · ข้อมูลตรงกัน', 'ok');
@@ -920,6 +960,9 @@
 
                 const reportMonth = document.getElementById('reportMonth');
                 if (reportMonth) reportMonth.addEventListener('change', () => this.renderReport());
+                document.getElementById('reportYear')?.addEventListener('change', () => this.renderReport());
+                document.getElementById('historySearch')?.addEventListener('input', () => this.renderHistory());
+                document.getElementById('historyStatusFilter')?.addEventListener('change', () => this.renderHistory());
 
                 const otMultiplier = document.getElementById('otMultiplier');
                 if (otMultiplier) otMultiplier.addEventListener('change', () => { this.calculate(); this.scheduleCalculatorStateSave(); });
@@ -1520,9 +1563,18 @@
 
             async saveRecord() {
                 const data = this.calculate();
+                const candidateName = String(data.v.name || '').trim().toLocaleLowerCase();
+                const candidatePeriod = this.monthKeyFromPeriod(data.v.period);
+                const duplicates = (this.salaryHistory || []).filter(item =>
+                    String(item.name || '').trim().toLocaleLowerCase() === candidateName &&
+                    candidatePeriod && this.monthKeyFromPeriod(item.period) === candidatePeriod
+                );
+                if (duplicates.length && !confirm(`พบสลิปของ ${data.v.name || 'พนักงาน'} ในงวด ${data.v.period} อยู่แล้ว ${duplicates.length} รายการ\nต้องการบันทึกสลิปซ้ำต่อหรือไม่?\nระบบจะไม่ลบหรือเขียนทับรายการเดิม`)) return;
                 const record = {
                     id: Math.max(Date.now(), Math.max(0, ...((this.salaryHistory || []).map(item => Number(item.id) || 0))) + 1),
                     recordUid: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : `rec-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                    salaryStatus: 'estimated',
+                    confirmedAt: null,
                     date: new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' }),
                     ...data.v,
                     otRate: data.otRate,
@@ -1566,19 +1618,40 @@
                 const history = this.salaryHistory || [];
                 const tbody = document.getElementById('historyTableBody');
                 if (!tbody) return;
+                const query = String(document.getElementById('historySearch')?.value || '').trim().toLocaleLowerCase();
+                const status = document.getElementById('historyStatusFilter')?.value || 'all';
+                const filtered = history.filter(item => {
+                    const searchable = [item.name, item.position, item.period, item.date].map(v => String(v || '')).join(' ').toLocaleLowerCase();
+                    const itemStatus = item.salaryStatus === 'confirmed' ? 'confirmed' : 'estimated';
+                    return (!query || searchable.includes(query)) && (status === 'all' || itemStatus === status);
+                });
+                const count = document.getElementById('historyResultCount');
+                if (count) count.textContent = `แสดง ${filtered.length} จาก ${history.length} รายการ`;
                 if (history.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">ยังไม่มีประวัติการบันทึกข้อมูล</td></tr>`;
                     return;
                 }
-                tbody.innerHTML = history.map(item => `
+                if (!filtered.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">ไม่พบรายการที่ตรงกับตัวกรอง</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = filtered.map(item => `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3"><div class="font-medium text-slate-800">${this.escapeHtml(item.name)}</div><div class="text-xs text-slate-400">${this.escapeHtml(item.position)}</div></td>
-                        <td class="p-3 text-slate-600">${this.escapeHtml(item.period)}</td>
+                        <td class="p-3 text-slate-600">${this.escapeHtml(item.period)}<div class="mt-1"><span class="inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${item.salaryStatus === 'confirmed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.salaryStatus === 'confirmed' ? 'ยืนยันแล้ว' : 'ประมาณการ'}</span></div></td>
                         <td class="p-3 text-right text-emerald-600 font-medium">${this.formatNumber(Number(item.totalIncome) || 0)} ฿</td>
                         <td class="p-3 text-right text-rose-600 font-medium">${this.formatNumber(Number(item.totalDeduction) || 0)} ฿</td>
                         <td class="p-3 text-right font-bold text-slate-900">${this.formatNumber(Number(item.netSalary) || 0)} ฿</td>
-                        <td class="p-3 text-center"><button onclick="app.deleteRecord(${Number(item.id)})" class="text-slate-400 hover:text-rose-600 p-1.5 transition" title="ลบรายการ"><i class="fa-solid fa-trash-can"></i></button></td>
+                        <td class="p-3 text-center whitespace-nowrap"><button onclick="app.toggleSalaryStatus(${Number(item.id)})" class="text-xs rounded-lg px-2 py-1 ${item.salaryStatus === 'confirmed' ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}" title="เปลี่ยนสถานะ">${item.salaryStatus === 'confirmed' ? 'ยกเลิกยืนยัน' : 'ยืนยันยอด'}</button><button onclick="app.printSavedPayslip(${Number(item.id)})" class="text-blue-600 hover:text-blue-800 p-1.5" title="พิมพ์ / PDF"><i class="fa-solid fa-file-pdf"></i></button><button onclick="app.deleteRecord(${Number(item.id)})" class="text-slate-400 hover:text-rose-600 p-1.5 transition" title="ลบรายการ"><i class="fa-solid fa-trash-can"></i></button></td>
                     </tr>`).join('');
+            }
+
+            resetHistoryFilters() {
+                const search = document.getElementById('historySearch');
+                const status = document.getElementById('historyStatusFilter');
+                if (search) search.value = '';
+                if (status) status.value = 'all';
+                this.renderHistory();
             }
 
             escapeHtml(value) {
@@ -1604,6 +1677,30 @@
                 catch (err) { this.salaryHistory = old; localStorage.setItem('salary_history', JSON.stringify(old)); this.renderHistory(); this.setSyncStatus('ล้างประวัติไม่สำเร็จ', 'error'); alert('ล้างประวัติไม่สำเร็จ: ' + err.message); }
             }
 
+            populateReportYears() {
+                const select = document.getElementById('reportYear');
+                if (!select) return;
+                const currentYear = this.currentDate.getFullYear();
+                const years = new Set([currentYear]);
+                (this.salaryHistory || []).forEach(r => { const key = this.monthKeyFromPeriod(r.period); if (key) years.add(Number(key.slice(0,4))); });
+                select.innerHTML = Array.from(years).sort((a,b)=>b-a).map(y => `<option value="${y}">${y} / ${y+543}</option>`).join('');
+                select.value = String(currentYear);
+            }
+
+            monthKeyFromPeriod(period) {
+                const p = String(period || '').toLowerCase();
+                const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+                let month = months.findIndex(m => p.includes(m));
+                if (month < 0) {
+                    const eng = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+                    month = eng.findIndex(m => p.includes(m));
+                }
+                const yearMatch = p.match(/(?:25\d{2}|20\d{2})/);
+                if (month < 0 || !yearMatch) return null;
+                let year = Number(yearMatch[0]); if (year > 2400) year -= 543;
+                return `${year}-${String(month+1).padStart(2,'0')}`;
+            }
+
             renderReport() {
                 const monthEl = document.getElementById('reportMonth');
                 if (!monthEl) return;
@@ -1617,18 +1714,134 @@
                     if (r.shift === 'MORNING') shiftAllowance += 32;
                     if (r.shift === 'AFTERNOON') shiftAllowance += 48;
                 });
-                const slips = (this.salaryHistory || []).filter(r => {
-                    const p = String(r.period || '');
-                    const parts = monthKey.split('-');
-                    const thaiMonth = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'][Number(parts[1])-1];
-                    return p.includes(thaiMonth) && (p.includes(String(Number(parts[0])+543)) || p.includes(parts[0]));
-                });
+                const slips = (this.salaryHistory || []).filter(r => this.monthKeyFromPeriod(r.period) === monthKey);
                 document.getElementById('reportWorkDays').textContent = workDays;
                 document.getElementById('reportOtHours').textContent = `${otHours.toLocaleString('th-TH')} ชม.`;
                 document.getElementById('reportShift').textContent = `${shiftAllowance.toLocaleString('th-TH')} ฿`;
                 document.getElementById('reportSlips').textContent = slips.length;
                 const tbody = document.getElementById('reportHistoryBody');
-                tbody.innerHTML = slips.length ? slips.map(r => `<tr><td class="p-3">${this.escapeHtml(r.name)}</td><td class="p-3">${this.escapeHtml(r.period)}</td><td class="p-3 text-right">${this.formatNumber(Number(r.totalIncome)||0)} ฿</td><td class="p-3 text-right">${this.formatNumber(Number(r.totalDeduction)||0)} ฿</td><td class="p-3 text-right font-bold">${this.formatNumber(Number(r.netSalary)||0)} ฿</td></tr>`).join('') : '<tr><td colspan="5" class="p-5 text-center text-slate-400">ไม่พบสลิปในเดือนที่เลือก</td></tr>';
+                tbody.innerHTML = slips.length ? slips.map(r => `<tr><td class="p-3">${this.escapeHtml(r.name)}</td><td class="p-3">${this.escapeHtml(r.period)}<div class="text-xs ${r.salaryStatus === 'confirmed' ? 'text-emerald-700' : 'text-amber-700'}">${r.salaryStatus === 'confirmed' ? 'ยืนยันแล้ว' : 'ประมาณการ'}</div></td><td class="p-3 text-right">${this.formatNumber(Number(r.totalIncome)||0)} ฿</td><td class="p-3 text-right">${this.formatNumber(Number(r.totalDeduction)||0)} ฿</td><td class="p-3 text-right font-bold">${this.formatNumber(Number(r.netSalary)||0)} ฿</td></tr>`).join('') : '<tr><td colspan="5" class="p-5 text-center text-slate-400">ไม่พบสลิปในเดือนที่เลือก</td></tr>';
+                const [year, month] = monthKey.split('-').map(Number);
+                const prevKey = month === 1 ? `${year-1}-12` : `${year}-${String(month-1).padStart(2,'0')}`;
+                const prevSlips = (this.salaryHistory || []).filter(r => this.monthKeyFromPeriod(r.period) === prevKey);
+                const sum = (arr, key) => arr.reduce((a,r)=>a+(Number(r[key])||0),0);
+                const curNet = sum(slips,'netSalary'), prevNet = sum(prevSlips,'netSalary');
+                document.getElementById('compareIncome').textContent = `${this.formatNumber(sum(slips,'totalIncome'))} ฿`;
+                document.getElementById('compareNet').textContent = `${this.formatNumber(curNet)} ฿`;
+                const delta = curNet-prevNet;
+                document.getElementById('compareDelta').textContent = `${delta > 0 ? '+' : ''}${this.formatNumber(delta)} ฿`;
+                document.getElementById('compareCaption').textContent = `เดือนก่อน ${prevKey}: สุทธิ ${this.formatNumber(prevNet)} ฿ · เปลี่ยนแปลง ${prevSlips.length ? (delta >= 0 ? '+' : '')+this.formatNumber(delta)+' ฿' : 'ไม่มีข้อมูลเดือนก่อน'}`;
+                const yearSelect = document.getElementById('reportYear');
+                const annualYear = Number(yearSelect?.value || year);
+                const annualSlips = (this.salaryHistory || []).filter(r => { const key=this.monthKeyFromPeriod(r.period); return key && Number(key.slice(0,4))===annualYear; });
+                document.getElementById('annualIncome').textContent = this.formatNumber(sum(annualSlips,'totalIncome'));
+                document.getElementById('annualDeduction').textContent = this.formatNumber(sum(annualSlips,'totalDeduction'));
+                document.getElementById('annualNet').textContent = this.formatNumber(sum(annualSlips,'netSalary'));
+                document.getElementById('annualCaption').textContent = `ปี ${annualYear} / ${annualYear+543} · ${annualSlips.length} สลิป · ยืนยันแล้ว ${annualSlips.filter(r=>r.salaryStatus==='confirmed').length} รายการ`;
+                this.renderSalaryTrend(monthKey);
+                this.renderDataQuality();
+            }
+
+            renderSalaryTrend(anchorMonthKey) {
+                const el = document.getElementById('salaryTrendChart');
+                if (!el) return;
+                const [anchorYear, anchorMonth] = (anchorMonthKey || `${this.currentDate.getFullYear()}-${String(this.currentDate.getMonth()+1).padStart(2,'0')}`).split('-').map(Number);
+                const months = [];
+                for (let offset = 5; offset >= 0; offset--) {
+                    const d = new Date(anchorYear, anchorMonth - 1 - offset, 1);
+                    months.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
+                }
+                const sum = (rows, field) => rows.reduce((total, row) => total + (Number(row[field]) || 0), 0);
+                const data = months.map(key => {
+                    const slips = (this.salaryHistory || []).filter(r => this.monthKeyFromPeriod(r.period) === key);
+                    return { key, income: sum(slips, 'totalIncome'), net: sum(slips, 'netSalary'), count: slips.length };
+                });
+                const max = Math.max(1, ...data.map(d => Math.max(d.income, d.net)));
+                const fmtMonth = key => { const [y,m] = key.split('-').map(Number); return `${String(m).padStart(2,'0')}/${String(y+543).slice(-2)}`; };
+                el.innerHTML = data.map(d => `<div><div class="flex justify-between text-xs text-slate-600 mb-1"><span>${fmtMonth(d.key)} · ${d.count} สลิป</span><span>สุทธิ ${this.formatNumber(d.net)} ฿</span></div><div class="h-3 bg-white rounded-full overflow-hidden border border-sky-100" title="รายรับรวม ${this.formatNumber(d.income)} บาท"><div class="h-full bg-sky-600 rounded-full" style="width:${Math.max(0, Math.min(100, d.income/max*100))}%"></div></div><div class="h-2 mt-1 bg-white rounded-full overflow-hidden border border-sky-100" title="เงินสุทธิ ${this.formatNumber(d.net)} บาท"><div class="h-full bg-cyan-300 rounded-full" style="width:${Math.max(0, Math.min(100, d.net/max*100))}%"></div></div></div>`).join('');
+            }
+
+            getDataQualityIssues() {
+                const history = this.salaryHistory || [];
+                const issues = [];
+                const seen = new Map();
+                history.forEach(r => {
+                    const key = `${String(r.name || '').trim().toLocaleLowerCase()}|${this.monthKeyFromPeriod(r.period) || String(r.period || '').trim().toLocaleLowerCase()}`;
+                    if (r.name && r.period) {
+                        if (seen.has(key)) {
+                            issues.push({ id: r.id, name: r.name, period: r.period, type: 'งวดซ้ำ', detail: `มีสลิปพนักงาน/งวดเดียวกันมากกว่า 1 รายการ (รวมอย่างน้อย ${seen.get(key)+1} รายการ)` });
+                            seen.set(key, seen.get(key)+1);
+                        } else seen.set(key, 1);
+                    }
+                    const income = Number(r.totalIncome), deduction = Number(r.totalDeduction), net = Number(r.netSalary);
+                    if ([income,deduction,net].every(Number.isFinite) && Math.abs((income-deduction)-net) > 0.05) issues.push({ id:r.id, name:r.name, period:r.period, type:'ยอดเงินไม่สัมพันธ์', detail:`รายรับ ${income.toFixed(2)} - รายการหัก ${deduction.toFixed(2)} ไม่เท่ากับเงินสุทธิ ${net.toFixed(2)}` });
+                    if (!r.name || !r.period || r.id == null) issues.push({ id:r.id, name:r.name, period:r.period, type:'ข้อมูลสำคัญขาดหาย', detail:`${!r.name?'ไม่มีชื่อพนักงาน; ':''}${!r.period?'ไม่มีงวดเดือน; ':''}${r.id==null?'ไม่มีรหัสรายการ; ':''}`.replace(/; $/,'') });
+                    if ([income,deduction,net].some(n => Number.isFinite(n) && n < 0)) issues.push({ id:r.id, name:r.name, period:r.period, type:'ยอดติดลบ', detail:'พบรายรับ รายการหัก หรือเงินสุทธิเป็นค่าติดลบ โปรดตรวจสอบ' });
+                });
+                return issues;
+            }
+
+            renderDataQuality() {
+                const el = document.getElementById('dataQualitySummary');
+                if (!el) return;
+                const issues = this.getDataQualityIssues();
+                const types = ['งวดซ้ำ','ยอดเงินไม่สัมพันธ์','ข้อมูลสำคัญขาดหาย','ยอดติดลบ'];
+                const counts = Object.fromEntries(types.map(type => [type, issues.filter(i => i.type === type).length]));
+                el.innerHTML = `<div class="flex items-center gap-2 mb-2"><span class="inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-bold ${issues.length ? 'bg-amber-200 text-amber-900' : 'bg-emerald-200 text-emerald-900'}">${issues.length ? `พบ ${issues.length} จุดที่ควรตรวจสอบ` : 'ไม่พบความผิดปกติตามเงื่อนไข'}</span></div><div class="grid grid-cols-2 gap-2">${types.map(type=>`<div class="rounded-lg bg-white/80 border border-amber-100 p-2"><div class="text-xs text-slate-600">${type}</div><div class="text-lg font-bold ${counts[type] ? 'text-amber-800' : 'text-emerald-700'}">${counts[type]}</div></div>`).join('')}</div>${issues.length ? `<details class="mt-3"><summary class="cursor-pointer text-xs font-semibold text-amber-900">ดูรายละเอียดรายการที่ควรตรวจสอบ (สูงสุด 10 รายการ)</summary><ul class="mt-2 space-y-2 text-xs text-slate-700">${issues.slice(0,10).map(i=>`<li class="bg-white/70 rounded-lg p-2"><b>${this.escapeHtml(i.type)}</b> · ${this.escapeHtml(i.name||'ไม่ระบุชื่อ')} · ${this.escapeHtml(i.period||'ไม่ระบุงวด')}<div>${this.escapeHtml(i.detail)}</div></li>`).join('')}</ul></details>` : '<p class="text-xs text-emerald-800 mt-2">ตรวจสอบเฉพาะข้อมูลที่บันทึกในเครื่อง/โหลดเข้าระบบ ไม่ได้ตรวจสอบกับข้อมูลนายจ้างโดยอัตโนมัติ</p>'}`;
+            }
+
+            exportDataQualityCsv() {
+                const issues = this.getDataQualityIssues();
+                const rows = [['รหัสรายการ','พนักงาน','งวด','ประเภทปัญหา','รายละเอียด']];
+                issues.forEach(i => rows.push([i.id ?? '', i.name || '', i.period || '', i.type, i.detail]));
+                if (!issues.length) rows.push(['','','','ไม่พบปัญหา','ไม่พบความผิดปกติตามเงื่อนไขที่ระบบตรวจ']);
+                this.downloadCsv('AOTAVSEC_Data_Quality_Report.csv', rows);
+            }
+
+            async toggleSalaryStatus(id) {
+                const index = (this.salaryHistory || []).findIndex(r => Number(r.id) === Number(id));
+                if (index < 0) return;
+                const record = { ...this.salaryHistory[index] };
+                const confirmed = record.salaryStatus !== 'confirmed';
+                if (confirmed && !confirm('ยืนยันว่าเงินเดือนรายการนี้ได้รับการตรวจสอบแล้วใช่หรือไม่?')) return;
+                record.salaryStatus = confirmed ? 'confirmed' : 'estimated';
+                record.confirmedAt = confirmed ? new Date().toISOString() : null;
+                this.salaryHistory[index] = record;
+                localStorage.setItem('salary_history', JSON.stringify(this.salaryHistory));
+                this.renderHistory(); this.renderReport();
+                if (this.remoteEnabled) {
+                    try { const result = await this.runMutation('saveSalaryRecord', record); this.setSyncStatus(result.queued ? 'บันทึกสถานะไว้ในเครื่อง รอซิงก์' : 'อัปเดตสถานะเงินเดือนแล้ว', result.queued ? 'info' : 'ok'); }
+                    catch(e) { this.setSyncStatus('อัปเดตสถานะในเครื่องแล้ว แต่ซิงก์ไม่สำเร็จ', 'error'); }
+                }
+            }
+
+            printSavedPayslip(id) {
+                const r = (this.salaryHistory || []).find(x => Number(x.id) === Number(id));
+                if (!r) return;
+                this.openPrintableSlips([r], `สลิปเงินเดือน ${r.period || ''}`);
+            }
+
+            exportMonthlyPayslipsPdf() {
+                const monthKey = document.getElementById('reportMonth')?.value;
+                const slips = (this.salaryHistory || []).filter(r => this.monthKeyFromPeriod(r.period) === monthKey);
+                if (!slips.length) { alert('ไม่พบสลิปในเดือนที่เลือก'); return; }
+                this.openPrintableSlips(slips, `รายงานสลิปเงินเดือน ${monthKey}`);
+            }
+
+            openPrintableSlips(slips, title) {
+                const win = window.open('', '_blank');
+                if (!win) { alert('เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต pop-up แล้วลองใหม่'); return; }
+                const money = n => (Number(n)||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+                const esc = v => this.escapeHtml(v);
+                const pages = slips.map((r,i) => `<section class="slip ${i ? 'page-break' : ''}"><header><div><h1>AOTAVSEC · Salary & Attendance</h1><p>สลิปสรุปเงินเดือนส่วนบุคคล</p></div><div class="right"><h2>${esc(r.period || '-')}</h2><span class="status ${r.salaryStatus==='confirmed'?'confirmed':'estimated'}">${r.salaryStatus==='confirmed'?'ยืนยันแล้ว':'ประมาณการ'}</span></div></header><div class="person"><div><small>ชื่อพนักงาน</small><b>${esc(r.name||'-')}</b></div><div><small>ตำแหน่ง</small><b>${esc(r.position||'-')}</b></div><div><small>วันที่บันทึก</small><b>${esc(r.date||'-')}</b></div><div><small>วันทำงาน</small><b>${esc(r.workDays??'-')}</b></div></div><table><thead><tr><th>รายการรายรับ / รายการหัก</th><th class="right">จำนวนเงิน (บาท)</th></tr></thead><tbody><tr><td>เงินเดือนตั้งต้น</td><td class="right">${money(r.baseSalary)}</td></tr><tr><td>รายรับรายวันรวม</td><td class="right">${money((Number(r.dailyIncomeRate)||0)*(Number(r.workDays)||0))}</td></tr><tr><td>ค่าเข้ากะ</td><td class="right">${money(r.shiftAllowance)}</td></tr><tr><td>ค่าล่วงเวลา OT (${money(r.otHoursTotal??r.otHours)} ชม.)</td><td class="right">${money(r.otPay)}</td></tr><tr><td>ค่าคอมมิชชั่น / เบี้ยเลี้ยง / รายรับอื่น</td><td class="right">${money((Number(r.commission)||0)+(Number(r.allowance)||0)+(Number(r.otherIncome)||0))}</td></tr><tr class="total"><td>รายรับรวม</td><td class="right">${money(r.totalIncome)}</td></tr><tr><td>ประกันสังคม</td><td class="right">${money(r.socialSecurity)}</td></tr><tr><td>หักเบี้ยสำรองชีพ</td><td class="right">${money(r.tax)}</td></tr><tr><td>รายการหักอื่น ๆ</td><td class="right">${money(Math.max(0,(Number(r.totalDeduction)||0)-(Number(r.socialSecurity)||0)-(Number(r.tax)||0)))}</td></tr><tr class="total"><td>รายการหักรวม</td><td class="right">${money(r.totalDeduction)}</td></tr></tbody></table><div class="net"><span>เงินสุทธิ</span><strong>${money(r.netSalary)} บาท</strong></div><p class="note">เอกสารนี้สร้างจากข้อมูลที่บันทึกในแอป ไม่ใช่เอกสารรับรองจากนายจ้าง และสถานะ “ยืนยันแล้ว” เป็นสถานะที่ผู้ใช้กำหนดเอง</p></section>`).join('');
+                win.document.open(); win.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,'Tahoma',sans-serif;color:#1e293b;margin:0;font-size:12px}.slip{padding:2mm}.page-break{break-before:page;page-break-before:always}header{display:flex;justify-content:space-between;border-bottom:2px solid #2563eb;padding-bottom:12px;margin-bottom:18px}h1{font-size:19px;margin:0 0 5px}h2{font-size:16px;margin:0 0 8px}p{margin:0;color:#64748b}.right{text-align:right}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px}.confirmed{background:#dcfce7;color:#166534}.estimated{background:#fef3c7;color:#92400e}.person{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f8fafc;padding:14px;border-radius:8px;margin-bottom:18px}.person small{display:block;color:#64748b;margin-bottom:5px}.person b{font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f1f5f9}.total{font-weight:bold;background:#f8fafc}.net{margin-top:18px;padding:16px;background:#0f172a;color:white;border-radius:8px;display:flex;justify-content:space-between;align-items:center}.net strong{font-size:21px;color:#6ee7b7}.note{margin-top:14px;font-size:10px}@media screen{body{max-width:850px;margin:24px auto;padding:20px}.slip{border:1px solid #ddd;margin-bottom:20px;padding:25px}.page-break{border-top:3px dashed #aaa;padding-top:25px}}@media print{.page-break{break-before:page}}</style></head><body>${pages}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script></body></html>`); win.document.close();
+            }
+
+            exportAnnualCsv() {
+                const year = Number(document.getElementById('reportYear')?.value || this.currentDate.getFullYear());
+                const rows = [['ปี','รหัส','พนักงาน','ตำแหน่ง','งวด','สถานะ','รายรับรวม','รายการหักรวม','เงินสุทธิ','ชั่วโมง OT','ค่าเข้ากะ']];
+                (this.salaryHistory || []).filter(r => { const k=this.monthKeyFromPeriod(r.period); return k && Number(k.slice(0,4))===year; }).forEach(r => rows.push([year,r.id,r.name,r.position,r.period,r.salaryStatus==='confirmed'?'ยืนยันแล้ว':'ประมาณการ',Number(r.totalIncome)||0,Number(r.totalDeduction)||0,Number(r.netSalary)||0,Number(r.otHoursTotal??r.otHours)||0,Number(r.shiftAllowance)||0]));
+                this.downloadCsv(`AOTAVSEC_Annual_Report_${year}.csv`, rows);
             }
 
             async refreshReport() {
@@ -1726,7 +1939,7 @@
                         this.applyCalculatorState(payload.calculatorState);
                         localStorage.setItem('salary_calculator_state', JSON.stringify(this.getCalculatorState()));
                     }
-                    this.calculate(); this.renderCalendar(); this.renderHistory(); this.renderReport();
+                    this.populateReportYears(); this.calculate(); this.renderCalendar(); this.renderHistory(); this.renderReport();
                     let pushed = 0, failed = 0;
                     if (this.remoteEnabled && navigator.onLine) {
                         if (importedOps.length) {
