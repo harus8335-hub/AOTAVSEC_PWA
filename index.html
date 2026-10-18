@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1d4ed8">
+    <meta name="theme-color" content="#10233f">
     <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v3.0 Phase 5">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
-    <title>AOTAVSEC Salary Calculator v3.2 Check In/Out Workflow</title>
+    <title>AOTAVSEC Salary Calculator v3.3 Premium Corporate</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
@@ -89,6 +89,44 @@
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
     @media print { body { background:#fff !important; } }
 
+
+    /* AOTAVSEC Premium Corporate UI v3.3 — visual layer only; calculation and data handlers remain unchanged */
+    :root { --av-navy:#10233f; --av-blue:#2457a7; --av-teal:#0f9f9a; --av-ink:#17263c; --av-muted:#64748b; --av-line:#e2e8f0; --av-surface:#fff; --av-canvas:#f4f7fb; }
+    html { background:var(--av-canvas); }
+    body { min-height:100%; }
+    body > header { background:linear-gradient(118deg,#0d1b31 0%,#173d69 58%,#0d6872 100%) !important; }
+    body > header button { min-height:40px; }
+    body > nav { z-index:40; }
+    main .bg-white.rounded-2xl { overflow-wrap:anywhere; }
+    main input, main select, main textarea { color:var(--av-ink); }
+    main button:focus-visible, body > header button:focus-visible, body > nav button:focus-visible { outline:3px solid rgba(20,145,170,.55); outline-offset:2px; }
+    #attendanceModal, #quickAttendanceModal, #payslipModal { backdrop-filter:blur(5px); }
+    #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { max-height:calc(100dvh - 2rem); overflow-y:auto; }
+    body[data-theme="dark"] { color-scheme:dark; color:#e6edf7 !important; background:#0a1220 !important; }
+    body[data-theme="dark"] > header { background:linear-gradient(118deg,#070d18 0%,#102746 58%,#0c3e48 100%) !important; }
+    body[data-theme="dark"] > nav { background:rgba(15,25,42,.96) !important; border-color:#26364d !important; box-shadow:0 5px 18px rgba(0,0,0,.22) !important; }
+    body[data-theme="dark"] > nav button { color:#a9b9ce !important; }
+    body[data-theme="dark"] > nav button:hover { background:#1b2b42 !important; color:#f3f7ff !important; }
+    body[data-theme="dark"] > nav button.border-blue-600 { background:#1b3658 !important; color:#a9d0ff !important; box-shadow:inset 0 0 0 1px #31577f; }
+    body[data-theme="dark"] main .bg-white, body[data-theme="dark"] main .bg-white.rounded-2xl, body[data-theme="dark"] main .bg-white.rounded-xl { background:#111e30 !important; border-color:#283950 !important; color:#e6edf7 !important; box-shadow:0 8px 24px rgba(0,0,0,.18) !important; }
+    body[data-theme="dark"] main .bg-slate-50, body[data-theme="dark"] main .bg-gray-50, body[data-theme="dark"] main .bg-blue-50, body[data-theme="dark"] main .bg-indigo-50, body[data-theme="dark"] main .bg-violet-50, body[data-theme="dark"] main .bg-emerald-50, body[data-theme="dark"] main .bg-amber-50, body[data-theme="dark"] main .bg-sky-50 { background:#17283e !important; color:#dce8f7 !important; }
+    body[data-theme="dark"] main h2, body[data-theme="dark"] main h3, body[data-theme="dark"] main h4, body[data-theme="dark"] main .text-slate-900, body[data-theme="dark"] main .text-slate-800, body[data-theme="dark"] main .text-slate-700, body[data-theme="dark"] main .text-gray-900, body[data-theme="dark"] main .text-gray-800, body[data-theme="dark"] main .text-gray-700 { color:#e6edf7 !important; }
+    body[data-theme="dark"] main .text-slate-600, body[data-theme="dark"] main .text-slate-500, body[data-theme="dark"] main .text-gray-600, body[data-theme="dark"] main .text-gray-500, body[data-theme="dark"] main label { color:#aabbd0 !important; }
+    body[data-theme="dark"] main input:not([type=checkbox]):not([type=radio]), body[data-theme="dark"] main select, body[data-theme="dark"] main textarea { background:#0b1626 !important; color:#f0f5fc !important; border-color:#354861 !important; }
+    body[data-theme="dark"] main input::placeholder, body[data-theme="dark"] main textarea::placeholder { color:#7f91a8 !important; }
+    body[data-theme="dark"] main input:focus, body[data-theme="dark"] main select:focus, body[data-theme="dark"] main textarea:focus { background:#101f33 !important; border-color:#5d9ce6 !important; box-shadow:0 0 0 3px rgba(59,130,246,.2) !important; }
+    body[data-theme="dark"] main .border-slate-100, body[data-theme="dark"] main .border-slate-200, body[data-theme="dark"] main .border-slate-300, body[data-theme="dark"] main .border-gray-200 { border-color:#2b3c53 !important; }
+    body[data-theme="dark"] main table { color:#dce7f5; }
+    body[data-theme="dark"] main thead th { background:#1b2b41 !important; color:#b9c9dd !important; }
+    body[data-theme="dark"] main tbody tr:hover { background:#1a2a40 !important; }
+    body[data-theme="dark"] main .divide-slate-100 > :not([hidden]) ~ :not([hidden]), body[data-theme="dark"] main .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #calendarGrid > * { border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #attendanceModal > div, body[data-theme="dark"] #quickAttendanceModal > div, body[data-theme="dark"] #payslipModal > div { background:#111e30 !important; color:#e6edf7 !important; border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #attendanceModal label, body[data-theme="dark"] #quickAttendanceModal label, body[data-theme="dark"] #payslipModal label { color:#b6c5d8 !important; }
+    body[data-theme="dark"] #attendanceModal input, body[data-theme="dark"] #attendanceModal select, body[data-theme="dark"] #quickAttendanceModal input, body[data-theme="dark"] #quickAttendanceModal select, body[data-theme="dark"] #payslipModal input, body[data-theme="dark"] #payslipModal select { background:#0b1626 !important; color:#f0f5fc !important; border-color:#354861 !important; }
+    @media (max-width:640px) { body > header > div > div:last-child { gap:.45rem !important; } body > header > div > div:last-child button { justify-content:center; } body > nav > div { scrollbar-width:none; } body > nav > div::-webkit-scrollbar { display:none; } #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { max-height:calc(100dvh - 1rem); } }
+    @media print { body, body[data-theme="dark"] { color-scheme:light !important; background:#fff !important; color:#111827 !important; } body > header, body > nav, #avThemeToggle { display:none !important; } }
+
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-full flex flex-col">
@@ -102,7 +140,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">AOTAVSEC Salary & Attendance</h1>
-                    <p class="text-xs sm:text-sm text-blue-100">ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล · UI/UX v3.2 · Check In / Check Out</p>
+                    <p class="text-xs sm:text-sm text-blue-100">ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล · Premium Corporate UI v3.3</p>
                 </div>
             </div>
             <div class="flex items-center flex-wrap gap-2">
@@ -112,6 +150,7 @@
                 <button onclick="app.quickTodayCheckOut()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md transition duration-200 flex items-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> Check Out วันนี้
                 </button>
+                <button id="avThemeToggle" type="button" onclick="toggleAvTheme()" title="สลับ Dark Mode / Light Mode" aria-label="สลับธีม" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-semibold border border-white/20"><i id="avThemeIcon" class="fa-solid fa-moon mr-1"></i><span id="avThemeLabel">Dark Mode</span></button>
                 <button onclick="app.syncNow()" title="ซิงก์ข้อมูลกับ Google Sheets" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-semibold border border-white/20"><i class="fa-solid fa-rotate mr-1"></i> ซิงก์</button>
                 <span id="syncStatus" role="button" tabindex="0" title="คลิกเพื่อดูสถานะและข้อมูลขัดแย้ง" class="cursor-pointer text-xs px-2 py-1 rounded-lg bg-white/15 border border-white/20">กำลังเชื่อมต่อฐานข้อมูล…</span>
                 <button onclick="app.resetForm()" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition duration-200 border border-white/20 flex items-center gap-1.5">
@@ -2213,5 +2252,28 @@
 
         const app = new SalaryApp();
     </script>
+<script>
+/* Theme preference only; does not modify salary or attendance data. */
+(function () {
+  const KEY = 'aotavsec_ui_theme';
+  function applyTheme(theme, save) {
+    const selected = theme === 'dark' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', selected);
+    document.documentElement.style.colorScheme = selected;
+    const icon = document.getElementById('avThemeIcon');
+    const label = document.getElementById('avThemeLabel');
+    const button = document.getElementById('avThemeToggle');
+    if (icon) icon.className = selected === 'dark' ? 'fa-solid fa-sun mr-1' : 'fa-solid fa-moon mr-1';
+    if (label) label.textContent = selected === 'dark' ? 'Light Mode' : 'Dark Mode';
+    if (button) button.setAttribute('aria-label', selected === 'dark' ? 'เปลี่ยนเป็น Light Mode' : 'เปลี่ยนเป็น Dark Mode');
+    if (save) { try { localStorage.setItem(KEY, selected); } catch (e) {} }
+  }
+  window.toggleAvTheme = function () { applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true); };
+  let saved = 'light';
+  try { saved = localStorage.getItem(KEY) || 'light'; } catch (e) {}
+  applyTheme(saved, false);
+})();
+</script>
+
 </body>
 </html>
