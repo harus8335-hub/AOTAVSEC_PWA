@@ -2,16 +2,17 @@
 <html lang="th" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#10233f">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0e2a47">
     <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v3.0 Phase 5">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
-    <title>AOTAVSEC Salary Calculator v3.3 Premium Corporate</title>
+    <title>AOTAVSEC Salary Calculator v4.0 Corporate Dashboard</title>
+    <script>(function(){var t;try{t=localStorage.getItem('salary_theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
@@ -24,209 +25,440 @@
             #printable-payslip { position: absolute; left: 0; top: 0; width: 100%; }
         }
 
-    /* AOTAVSEC UI/UX refresh v3.1 — visual layer only; existing IDs and handlers preserved */
-    :root { color-scheme: light; --av-navy:#10233f; --av-blue:#2457a7; --av-teal:#0f9f9a; --av-ink:#17263c; --av-muted:#64748b; --av-line:#e2e8f0; --av-surface:#ffffff; }
-    html { scroll-behavior:smooth; background:#f4f7fb; }
-    body { font-family:'Prompt',sans-serif; color:var(--av-ink); background:linear-gradient(180deg,#f4f7fb 0%,#f8fafc 36%,#f3f6fb 100%) !important; letter-spacing:.005em; }
-    body > header { background:linear-gradient(115deg,#10233f 0%,#183e70 60%,#126f7a 100%) !important; box-shadow:0 12px 32px rgba(15,35,65,.18) !important; }
-    body > header > div { padding-top:1.15rem !important; padding-bottom:1.15rem !important; }
-    body > header h1 { letter-spacing:-.025em; }
-    body > header .bg-white\/10 { background:rgba(255,255,255,.13) !important; border-color:rgba(255,255,255,.2) !important; }
-    body > header button { border-radius:12px !important; min-height:40px; transition:transform .18s ease,filter .18s ease,box-shadow .18s ease; }
-    body > header button:hover { transform:translateY(-1px); filter:brightness(1.04); }
-    body > nav { background:rgba(255,255,255,.94) !important; border-bottom:1px solid #dbe5f0 !important; box-shadow:0 5px 18px rgba(22,40,68,.055) !important; backdrop-filter:blur(14px); }
-    body > nav > div { gap:.35rem !important; padding-top:.45rem; padding-bottom:.45rem; }
-    body > nav button { border:0 !important; border-radius:12px 12px 10px 10px !important; padding:.8rem 1rem !important; color:#607087 !important; transition:background .18s ease,color .18s ease; }
-    body > nav button:hover { background:#f1f6fb !important; color:#1e4779 !important; }
-    body > nav button.border-blue-600 { background:#eaf3ff !important; color:#174b88 !important; box-shadow:inset 0 0 0 1px #d4e6ff; }
-    main { max-width:1440px !important; padding-top:1.6rem !important; padding-bottom:2.5rem !important; }
-    main > div:not(.hidden) { animation:avFadeIn .22s ease both; }
-    @keyframes avFadeIn { from {opacity:.55;transform:translateY(4px)} to {opacity:1;transform:translateY(0)} }
-    main .bg-white.rounded-2xl { border:1px solid #e4eaf2 !important; border-radius:20px !important; box-shadow:0 7px 24px rgba(25,48,79,.055) !important; }
-    main .bg-white.rounded-2xl.p-6, main .bg-white.rounded-2xl .p-6 { padding:1.35rem !important; }
-    main h2 { color:#172d4a !important; letter-spacing:-.015em; }
-    main h3 { letter-spacing:-.01em; }
-    main label { color:#52647b !important; font-weight:500 !important; }
-    main input:not([type=checkbox]):not([type=radio]), main select, main textarea { border-color:#d8e1ec !important; border-radius:11px !important; background-color:#fbfdff !important; min-height:42px; transition:border-color .15s ease,box-shadow .15s ease,background .15s ease; }
-    main input:not([type=checkbox]):not([type=radio]):focus, main select:focus, main textarea:focus { border-color:#4c8bd8 !important; background:#fff !important; box-shadow:0 0 0 3px rgba(59,130,246,.13) !important; outline:none !important; }
-    main button { border-radius:11px; transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease; }
-    main button:hover { box-shadow:0 4px 12px rgba(25,48,79,.09); }
-    main button:active { transform:translateY(1px); }
-    main .bg-blue-600, main .bg-indigo-600 { background:linear-gradient(135deg,#2457a7,#286fc0) !important; }
-    main .bg-blue-600:hover, main .bg-indigo-600:hover { filter:brightness(.96); }
-    main .bg-emerald-500 { background:#0f9f8f !important; }
-    main .bg-emerald-50 { background:#eafaf5 !important; }
-    main .bg-amber-50 { background:#fff7e8 !important; }
-    main .bg-indigo-50 { background:#eef3ff !important; }
-    main .bg-violet-50 { background:#f5f1ff !important; }
-    main .border-slate-100, main .border-slate-200, main .border-slate-300 { border-color:#e2e8f0 !important; }
-    main .bg-slate-50 { background:#f7f9fc !important; }
-    main table { border-collapse:separate !important; border-spacing:0; }
-    main thead th { background:#f4f7fb !important; color:#53647a !important; font-weight:600; }
-    main tbody tr:hover { background:#f8fbff; }
-    #calendarGrid { gap:.45rem !important; }
-    #calendarGrid > * { border-radius:12px !important; transition:transform .15s ease,box-shadow .15s ease; }
-    #calendarGrid > *:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(25,48,79,.08); }
-    #attendanceModal > div { border-radius:22px !important; box-shadow:0 25px 70px rgba(7,20,42,.3) !important; }
-    #syncStatus { font-weight:500; }
-    :focus-visible { outline:3px solid rgba(20,145,170,.45); outline-offset:2px; }
-    @media (min-width:1024px) { main { padding-left:2rem !important; padding-right:2rem !important; } }
-    @media (max-width:640px) {
-      body > header > div { align-items:stretch !important; }
-      body > header > div > div:first-child { align-items:center; }
-      body > header h1 { font-size:1.2rem !important; }
-      body > header p { line-height:1.5; }
-      body > header > div > div:last-child { display:grid !important; grid-template-columns:1fr 1fr; width:100%; }
-      body > header > div > div:last-child #syncStatus { grid-column:1 / -1; text-align:center; }
-      body > nav { top:0; }
-      body > nav > div { gap:.2rem !important; padding-left:.75rem !important; padding-right:.75rem !important; }
-      body > nav button { flex:0 0 auto; padding:.7rem .75rem !important; font-size:.78rem !important; }
-      main { padding:.9rem .7rem 1.5rem !important; }
-      main .bg-white.rounded-2xl.p-6, main .bg-white.rounded-2xl .p-6 { padding:1rem !important; }
-      #calendarGrid { gap:.2rem !important; }
-      #calendarGrid > * { border-radius:8px !important; min-width:0; }
+    
+    /* ============================================================
+       AOTAVSEC Corporate theme v4.0
+       Visual layer only. All element IDs, handlers and formulas are untouched.
+       ============================================================ */
+    :root {
+      color-scheme: light;
+      --bg:#edf1f6; --surface:#ffffff; --surface-2:#f4f6fa; --line:#d8dfe9; --line-strong:#c2ccda;
+      --ink:#12233a; --ink-2:#42536a; --ink-3:#66768c;
+      --brand:#1b4b82; --btn:#1b4b82; --btn-hover:#153e6d; --brand-soft:#e6eef8;
+      --navy:#0e2a47; --navy-2:#163a60; --on-navy:#e8eff8; --on-navy-2:#a9bbd2;
+      --pos:#0b7a5e; --pos-btn:#0f7f62; --pos-soft:#e5f4ef;
+      --neg:#b3263e; --neg-soft:#fbeaed;
+      --warn:#9a6208; --warn-btn:#b4690e; --warn-soft:#fbf1de;
+      --shadow:0 1px 2px rgba(14,42,71,.06),0 4px 14px rgba(14,42,71,.05);
+      --radius:12px;
+      --focus:#2f7fd1;
     }
-    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
-    @media print { body { background:#fff !important; } }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg:#0a1424; --surface:#0f1f35; --surface-2:#15283f; --line:#223653; --line-strong:#304764;
+      --ink:#e8eff8; --ink-2:#b2c0d4; --ink-3:#8797ae;
+      --brand:#6aa8ee; --btn:#2b66b3; --btn-hover:#3a78c8; --brand-soft:#14304f;
+      --navy:#0b2038; --navy-2:#123152;
+      --pos:#37c49c; --pos-btn:#14876a; --pos-soft:#0f2e29;
+      --neg:#f27a8f; --neg-soft:#34161f;
+      --warn:#e3ad4c; --warn-btn:#b4690e; --warn-soft:#33270f;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.25);
+      --focus:#6aa8ee;
+    }
 
+    html { scroll-behavior:smooth; background:var(--bg); }
+    html body {
+      font-family:'IBM Plex Sans Thai','Prompt',sans-serif;
+      background:var(--bg) !important; color:var(--ink) !important;
+      font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+    }
+    main, main *, .av-header-inner, .av-header-inner *, .bn, .bn *, .ps-panel, .ps-panel * { box-sizing:border-box; }
+    :focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+    main { max-width:1280px !important; padding-top:1.4rem !important; padding-bottom:3rem !important; }
+    main > div:not(.hidden) { animation:avIn .2s ease both; }
+    @keyframes avIn { from{opacity:.4} to{opacity:1} }
 
-    /* AOTAVSEC Premium Corporate UI v3.3 — visual layer only; calculation and data handlers remain unchanged */
-    :root { --av-navy:#10233f; --av-blue:#2457a7; --av-teal:#0f9f9a; --av-ink:#17263c; --av-muted:#64748b; --av-line:#e2e8f0; --av-surface:#fff; --av-canvas:#f4f7fb; }
-    html { background:var(--av-canvas); }
-    body { min-height:100%; }
-    body > header { background:linear-gradient(118deg,#0d1b31 0%,#173d69 58%,#0d6872 100%) !important; }
-    body > header button { min-height:40px; }
-    body > nav { z-index:40; }
-    main .bg-white.rounded-2xl { overflow-wrap:anywhere; }
-    main input, main select, main textarea { color:var(--av-ink); }
-    main button:focus-visible, body > header button:focus-visible, body > nav button:focus-visible { outline:3px solid rgba(20,145,170,.55); outline-offset:2px; }
-    #attendanceModal, #quickAttendanceModal, #payslipModal { backdrop-filter:blur(5px); }
-    #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { max-height:calc(100dvh - 2rem); overflow-y:auto; }
-    body[data-theme="dark"] { color-scheme:dark; color:#e6edf7 !important; background:#0a1220 !important; }
-    body[data-theme="dark"] > header { background:linear-gradient(118deg,#070d18 0%,#102746 58%,#0c3e48 100%) !important; }
-    body[data-theme="dark"] > nav { background:rgba(15,25,42,.96) !important; border-color:#26364d !important; box-shadow:0 5px 18px rgba(0,0,0,.22) !important; }
-    body[data-theme="dark"] > nav button { color:#a9b9ce !important; }
-    body[data-theme="dark"] > nav button:hover { background:#1b2b42 !important; color:#f3f7ff !important; }
-    body[data-theme="dark"] > nav button.border-blue-600 { background:#1b3658 !important; color:#a9d0ff !important; box-shadow:inset 0 0 0 1px #31577f; }
-    body[data-theme="dark"] main .bg-white, body[data-theme="dark"] main .bg-white.rounded-2xl, body[data-theme="dark"] main .bg-white.rounded-xl { background:#111e30 !important; border-color:#283950 !important; color:#e6edf7 !important; box-shadow:0 8px 24px rgba(0,0,0,.18) !important; }
-    body[data-theme="dark"] main .bg-slate-50, body[data-theme="dark"] main .bg-gray-50, body[data-theme="dark"] main .bg-blue-50, body[data-theme="dark"] main .bg-indigo-50, body[data-theme="dark"] main .bg-violet-50, body[data-theme="dark"] main .bg-emerald-50, body[data-theme="dark"] main .bg-amber-50, body[data-theme="dark"] main .bg-sky-50 { background:#17283e !important; color:#dce8f7 !important; }
-    body[data-theme="dark"] main h2, body[data-theme="dark"] main h3, body[data-theme="dark"] main h4, body[data-theme="dark"] main .text-slate-900, body[data-theme="dark"] main .text-slate-800, body[data-theme="dark"] main .text-slate-700, body[data-theme="dark"] main .text-gray-900, body[data-theme="dark"] main .text-gray-800, body[data-theme="dark"] main .text-gray-700 { color:#e6edf7 !important; }
-    body[data-theme="dark"] main .text-slate-600, body[data-theme="dark"] main .text-slate-500, body[data-theme="dark"] main .text-gray-600, body[data-theme="dark"] main .text-gray-500, body[data-theme="dark"] main label { color:#aabbd0 !important; }
-    body[data-theme="dark"] main input:not([type=checkbox]):not([type=radio]), body[data-theme="dark"] main select, body[data-theme="dark"] main textarea { background:#0b1626 !important; color:#f0f5fc !important; border-color:#354861 !important; }
-    body[data-theme="dark"] main input::placeholder, body[data-theme="dark"] main textarea::placeholder { color:#7f91a8 !important; }
-    body[data-theme="dark"] main input:focus, body[data-theme="dark"] main select:focus, body[data-theme="dark"] main textarea:focus { background:#101f33 !important; border-color:#5d9ce6 !important; box-shadow:0 0 0 3px rgba(59,130,246,.2) !important; }
-    body[data-theme="dark"] main .border-slate-100, body[data-theme="dark"] main .border-slate-200, body[data-theme="dark"] main .border-slate-300, body[data-theme="dark"] main .border-gray-200 { border-color:#2b3c53 !important; }
-    body[data-theme="dark"] main table { color:#dce7f5; }
-    body[data-theme="dark"] main thead th { background:#1b2b41 !important; color:#b9c9dd !important; }
-    body[data-theme="dark"] main tbody tr:hover { background:#1a2a40 !important; }
-    body[data-theme="dark"] main .divide-slate-100 > :not([hidden]) ~ :not([hidden]), body[data-theme="dark"] main .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color:#2b3c53 !important; }
-    body[data-theme="dark"] #calendarGrid > * { border-color:#2b3c53 !important; }
-    body[data-theme="dark"] #attendanceModal > div, body[data-theme="dark"] #quickAttendanceModal > div, body[data-theme="dark"] #payslipModal > div { background:#111e30 !important; color:#e6edf7 !important; border-color:#2b3c53 !important; }
-    body[data-theme="dark"] #attendanceModal label, body[data-theme="dark"] #quickAttendanceModal label, body[data-theme="dark"] #payslipModal label { color:#b6c5d8 !important; }
-    body[data-theme="dark"] #attendanceModal input, body[data-theme="dark"] #attendanceModal select, body[data-theme="dark"] #quickAttendanceModal input, body[data-theme="dark"] #quickAttendanceModal select, body[data-theme="dark"] #payslipModal input, body[data-theme="dark"] #payslipModal select { background:#0b1626 !important; color:#f0f5fc !important; border-color:#354861 !important; }
-    @media (max-width:640px) { body > header > div > div:last-child { gap:.45rem !important; } body > header > div > div:last-child button { justify-content:center; } body > nav > div { scrollbar-width:none; } body > nav > div::-webkit-scrollbar { display:none; } #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { max-height:calc(100dvh - 1rem); } }
-    @media print { body, body[data-theme="dark"] { color-scheme:light !important; background:#fff !important; color:#111827 !important; } body > header, body > nav, #avThemeToggle { display:none !important; } }
+    /* ---------- Header ---------- */
+    .av-header { background:var(--navy); color:var(--on-navy); border-bottom:3px solid var(--btn); }
+    .av-header-inner { max-width:1280px; margin:0 auto; padding:.8rem 1rem; display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; }
+    @media (min-width:1024px){ .av-header-inner{ padding:.8rem 2rem; } }
+    .av-brand { display:flex; align-items:center; gap:.7rem; min-width:0; }
+    .av-logo { width:2.5rem; height:2.5rem; border-radius:10px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); display:grid; place-items:center; font-size:1.15rem; flex:none; }
+    .av-brand h1 { font-size:1.1rem; font-weight:600; letter-spacing:-.01em; line-height:1.25; }
+    .av-brand p { font-size:.75rem; color:var(--on-navy-2); line-height:1.3; }
+    .av-actions { display:flex; align-items:center; gap:.45rem; flex-wrap:wrap; }
+    .hd-btn { display:inline-flex; align-items:center; gap:.4rem; min-height:38px; padding:.4rem .8rem; border-radius:9px; font-size:.8rem; font-weight:500; color:#fff; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); transition:background .15s ease; }
+    .hd-btn:hover { background:rgba(255,255,255,.18); }
+    .hd-btn-in { background:var(--pos-btn); border-color:transparent; font-weight:600; }
+    .hd-btn-out { background:var(--warn-btn); border-color:transparent; font-weight:600; }
+    .hd-btn-in:hover { background:#13906f; } .hd-btn-out:hover { background:#c77814; }
+    #syncStatus { font-weight:500; font-size:.72rem; color:#fff; max-width:15rem; }
+    @media (max-width:767px){
+      .av-header-inner { padding:.65rem .85rem; }
+      .av-brand p { display:none; }
+      .av-brand h1 { font-size:1rem; }
+      .av-actions { width:100%; display:grid; grid-template-columns:auto 1fr; gap:.4rem; }
+      .av-actions .md-only { display:none !important; }
+      #syncStatus { text-align:center; max-width:none; }
+    }
 
+    /* ---------- Top navigation (desktop) ---------- */
+    body > nav:not(.bn) { background:var(--surface) !important; border-bottom:1px solid var(--line) !important; box-shadow:none !important; }
+    body > nav:not(.bn) > div { gap:.25rem !important; }
+    .av-tab { display:inline-flex; align-items:center; gap:.5rem; white-space:nowrap; padding:.9rem .95rem; font-size:.88rem; font-weight:500; color:var(--ink-3); border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .15s ease,background .15s ease; }
+    .av-tab:hover { color:var(--ink); background:var(--surface-2); }
+    .av-tab.is-active { color:var(--brand); border-bottom-color:var(--brand); font-weight:600; }
+    @media (max-width:767px){ body > nav:not(.bn) { display:none !important; } }
 
-    /* v3.3 UI/UX: responsive dashboard and mobile navigation */
-    #view-dashboard article,#view-dashboard section { min-width:0; }
-    #view-dashboard button,#avBottomNav button { transition:background-color .16s ease,border-color .16s ease,transform .16s ease; }
-    #view-dashboard button:focus-visible,#avBottomNav button:focus-visible { outline:3px solid rgba(36,87,167,.45); outline-offset:2px; }
-    #avBottomNav [aria-current="page"] { background:#eaf2ff; color:#2457a7 !important; }
-    body[data-theme="dark"] #avBottomNav { background:rgba(15,25,42,.97) !important; border-color:#2b3c53 !important; }
-    body[data-theme="dark"] #avBottomNav button { color:#aabbd0 !important; }
-    body[data-theme="dark"] #avBottomNav [aria-current="page"] { background:#1b3658 !important; color:#a9d0ff !important; }
-    body[data-theme="dark"] #view-dashboard .bg-white { background:#111e30 !important; border-color:#283950 !important; color:#e6edf7 !important; }
-    body[data-theme="dark"] #view-dashboard .text-slate-900,body[data-theme="dark"] #view-dashboard .text-slate-800,body[data-theme="dark"] #view-dashboard .text-slate-700 { color:#e6edf7 !important; }
-    body[data-theme="dark"] #view-dashboard .text-slate-500,body[data-theme="dark"] #view-dashboard .text-slate-600 { color:#aabbd0 !important; }
-    body[data-theme="dark"] #view-dashboard .bg-slate-100 { background:#1b2b41 !important; color:#dce8f7 !important; }
-    body[data-theme="dark"] #view-dashboard .border-slate-100,body[data-theme="dark"] #view-dashboard .border-slate-200 { border-color:#2b3c53 !important; }
-    @media (min-width:640px) { #avBottomNav { display:none !important; } }
-    @media (prefers-reduced-motion:reduce) { #view-dashboard button,#avBottomNav button { transition:none !important; } }
+    /* ---------- Cards, headings, forms ---------- */
+    main .bg-white.rounded-2xl { background:var(--surface) !important; border:1px solid var(--line) !important; border-radius:var(--radius) !important; box-shadow:var(--shadow) !important; }
+    main .bg-white.rounded-2xl.p-6, main .bg-white.rounded-2xl .p-6 { padding:1.25rem !important; }
+    main h2 { color:var(--ink) !important; font-weight:600; letter-spacing:-.01em; }
+    main h3 { color:var(--ink) !important; font-weight:600; }
+    main label { color:var(--ink-2) !important; font-weight:500 !important; }
+    main input:not([type=checkbox]):not([type=radio]), main select, main textarea,
+    #attendanceModal input:not([type=checkbox]):not([type=radio]), #attendanceModal select, #attendanceModal textarea,
+    #quickAttendanceModal input, #quickAttendanceModal select, #quickAttendanceModal textarea, #payslipModal input, #payslipModal select {
+      background:var(--surface) !important; color:var(--ink) !important; border:1px solid var(--line-strong) !important; border-radius:8px !important; min-height:42px; transition:border-color .15s ease,box-shadow .15s ease;
+    }
+    main input[readonly], main input.bg-slate-100 { background:var(--surface-2) !important; color:var(--ink-3) !important; }
+    main input:focus, main select:focus, main textarea:focus, #attendanceModal :is(input,select,textarea):focus, #quickAttendanceModal :is(input,select,textarea):focus {
+      border-color:var(--focus) !important; box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent) !important; outline:none !important;
+    }
+    main input::placeholder { color:var(--ink-3); opacity:.8; }
+    main input[type=checkbox], main input[type=radio] { accent-color:var(--btn); }
+    main button { border-radius:9px; transition:background-color .15s ease,border-color .15s ease,filter .15s ease; }
+    main button:active { filter:brightness(.94); }
+
+    /* Corporate palette for solid buttons that use utility colors */
+    main .bg-blue-600, main .bg-indigo-600, main .bg-violet-600, main .bg-violet-700, main .bg-cyan-700, main .bg-slate-800, main .bg-slate-600, main .bg-rose-600, main .bg-blue-700 { background:var(--btn) !important; color:#fff !important; }
+    main .bg-blue-600:hover, main .bg-indigo-600:hover, main .bg-violet-600:hover, main .bg-violet-700:hover, main .bg-cyan-700:hover, main .bg-slate-800:hover, main .bg-slate-600:hover, main .bg-rose-600:hover { background:var(--btn-hover) !important; }
+    main .bg-emerald-600, main .bg-emerald-500 { background:var(--pos-btn) !important; color:#fff !important; }
+    main .bg-gradient-to-br.from-slate-900 { background:var(--navy) !important; background-image:none !important; border:1px solid var(--navy-2) !important; border-radius:var(--radius) !important; box-shadow:var(--shadow) !important; }
+    main .bg-gradient-to-br.from-slate-900 .text-slate-400, main .bg-gradient-to-br.from-slate-900 .text-slate-300 { color:var(--on-navy-2) !important; }
+    main .bg-gradient-to-br.from-slate-900 .bg-blue-600 { background:#2b66b3 !important; }
+    main .bg-gradient-to-br.from-slate-900 .text-emerald-400 { color:#5be0b6 !important; }
+    main .bg-gradient-to-br.from-slate-900 .text-rose-400 { color:#ff9aab !important; }
+
+    /* Tinted tiles (calendar/report stats, notes): neutral surface + color-coded left edge */
+    main [class~="bg-emerald-50"], main [class~="bg-orange-50"], main [class~="bg-blue-50"], main [class~="bg-amber-50"],
+    main [class~="bg-purple-50"], main [class~="bg-cyan-50"], main [class~="bg-rose-50"], main [class~="bg-indigo-50"],
+    main [class~="bg-violet-50"], main [class~="bg-sky-50"] {
+      background:var(--surface-2) !important; border-color:var(--line) !important; border-left-width:3px !important; border-radius:10px !important;
+    }
+    main [class~="bg-emerald-50"] { border-left-color:var(--pos) !important; }
+    main [class~="bg-orange-50"], main [class~="bg-amber-50"] { border-left-color:var(--warn-btn) !important; }
+    main [class~="bg-blue-50"], main [class~="bg-indigo-50"], main [class~="bg-sky-50"], main [class~="bg-cyan-50"] { border-left-color:var(--btn) !important; }
+    main [class~="bg-rose-50"] { border-left-color:var(--neg) !important; }
+    main [class~="bg-purple-50"], main [class~="bg-violet-50"] { border-left-color:#6b56b8 !important; }
+    main .bg-slate-50 { background:var(--surface-2) !important; }
+    main .bg-slate-100 { background:var(--surface-2) !important; }
+    main .border-slate-100, main .border-slate-200, main .border-slate-300 { border-color:var(--line) !important; }
+    main .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color:var(--line) !important; }
+    main .text-slate-900, main .text-slate-800, main .text-slate-700 { color:var(--ink) !important; }
+    main .text-slate-600, main .text-slate-500 { color:var(--ink-2) !important; }
+    main .text-slate-400 { color:var(--ink-3) !important; }
+
+    /* ---------- Tables ---------- */
+    main table { border-collapse:separate !important; border-spacing:0; width:100%; }
+    main thead th { background:var(--surface-2) !important; color:var(--ink-2) !important; font-weight:600; font-size:.78rem; border-bottom:1px solid var(--line-strong) !important; white-space:nowrap; }
+    main tbody td { border-bottom:1px solid var(--line); }
+    main tbody tr:last-child td { border-bottom:0; }
+    main tbody tr:hover { background:var(--brand-soft) !important; }
+    main tbody td.text-right, main thead th.text-right { font-variant-numeric:tabular-nums; }
+
+    /* ---------- Calendar ---------- */
+    #calendarGrid { gap:.4rem !important; }
+    #calendarGrid > * { border-radius:10px !important; border-color:var(--line) !important; background-color:var(--surface); }
+    #calendarGrid > [class*="bg-slate-50"] { background:transparent !important; border-style:dashed !important; }
+    #calendarGrid > [class*="bg-emerald-50"] { background-color:var(--pos-soft) !important; }
+    #calendarGrid > [class*="bg-amber-50"] { background-color:var(--warn-soft) !important; }
+    #calendarGrid > [class*="bg-purple-50"] { background-color:color-mix(in srgb,#6b56b8 12%,var(--surface)) !important; }
+    #calendarGrid > *:hover { border-color:var(--brand) !important; }
+    #calendarGrid > .ring-2 { --tw-ring-color:var(--brand) !important; }
+    main .grid.grid-cols-7 > div { color:var(--ink-3); }
+
+    /* ---------- Modals ---------- */
+    #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { background:var(--surface) !important; color:var(--ink); border:1px solid var(--line); border-radius:16px !important; box-shadow:0 24px 60px rgba(4,14,30,.4) !important; }
+    #attendanceModal [class*="bg-gradient-to"], #quickAttendanceModal [class*="bg-gradient-to"], #payslipModal [class*="bg-gradient-to"] { background:var(--navy) !important; background-image:none !important; color:#fff; }
+    #attendanceModal :is(h3,label,p,div,span), #quickAttendanceModal :is(h3,label,p,div,span), #payslipModal :is(h3,label,p,div,span) { border-color:var(--line); }
+
+    /* ---------- Reports: one consistent button set ---------- */
+    #view-reports .flex.flex-wrap.gap-2.mb-6 > button { background:var(--surface) !important; color:var(--ink) !important; border:1px solid var(--line-strong) !important; font-weight:500 !important; }
+    #view-reports .flex.flex-wrap.gap-2.mb-6 > button:hover { background:var(--brand-soft) !important; border-color:var(--brand) !important; }
+    #view-reports .flex.flex-wrap.gap-2.mb-6 > button:first-child { background:var(--btn) !important; color:#fff !important; border-color:var(--btn) !important; }
+    #view-reports .flex.flex-wrap.gap-2.mb-6 > button:first-child:hover { background:var(--btn-hover) !important; }
+    #view-reports [id^="salaryTrendChart"] [class*="bg-"] { border-radius:4px; }
+
+    /* ============================================================
+       Dashboard
+       ============================================================ */
+    .dx-greet { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+    .dx-date { font-size:.82rem; color:var(--ink-3); }
+    .dx-hello { font-size:1.45rem; line-height:1.3; }
+    .dx-meta { font-size:.85rem; color:var(--ink-2); margin-top:.15rem; }
+    .dx-btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:42px; padding:.5rem 1rem; border-radius:9px; font-size:.86rem; font-weight:600; border:1px solid transparent; cursor:pointer; transition:background-color .15s ease,border-color .15s ease; }
+    .dx-btn-ghost { background:var(--surface); color:var(--ink); border-color:var(--line-strong); }
+    .dx-btn-ghost:hover { background:var(--brand-soft); border-color:var(--brand); }
+    .dx-btn-solid { background:var(--pos-btn); color:#fff; }
+    .dx-btn-solid:hover { background:#13906f; }
+    .dx-btn-onnavy { background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.28); }
+    .dx-btn-onnavy:hover { background:rgba(255,255,255,.18); }
+
+    .dx-hero { display:grid; grid-template-columns:1fr; gap:1rem; }
+    @media (min-width:1024px){ .dx-hero { grid-template-columns:7fr 5fr; } .dx-punch { order:2; } .dx-net { order:1; } }
+    .dx-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.25rem; }
+    .dx-label { font-size:.84rem; font-weight:600; color:var(--ink-2); }
+
+    /* Net salary panel */
+    .dx-net { background:var(--navy); border-color:var(--navy-2); color:var(--on-navy); display:flex; flex-direction:column; gap:1rem; }
+    .dx-net .dx-label { color:var(--on-navy-2); }
+    .dx-net-figure { display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap; }
+    .dx-net-figure span { font-size:clamp(2.4rem,7vw,3.6rem); font-weight:600; line-height:1.05; letter-spacing:-.02em; color:#fff; }
+    .dx-net-figure small { font-size:1rem; color:var(--on-navy-2); }
+    .dx-split { display:flex; height:10px; border-radius:6px; overflow:hidden; background:rgba(255,255,255,.12); }
+    .dx-split i { display:block; height:100%; transition:width .35s ease; }
+    .dx-split i.net { background:#4fd1a8; } .dx-split i.ded { background:#f2788e; }
+    .dx-split-legend { display:flex; gap:1.25rem; flex-wrap:wrap; font-size:.82rem; color:var(--on-navy-2); }
+    .dx-split-legend b { color:#fff; font-weight:600; margin-left:.25rem; }
+    .dx-split-legend .dot { display:inline-block; width:.6rem; height:.6rem; border-radius:50%; margin-right:.4rem; }
+    .dx-split-legend .dot.net { background:#4fd1a8; } .dx-split-legend .dot.ded { background:#f2788e; }
+    .dx-net-actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:auto; }
+    .dx-net-actions .dx-btn { flex:1 1 9rem; }
+
+    /* Punch panel */
+    .dx-punch { display:flex; flex-direction:column; gap:.9rem; border-top:4px solid var(--btn); }
+    .dx-punch-head { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+    .dx-state { font-size:.76rem; font-weight:600; padding:.2rem .65rem; border-radius:999px; background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line); }
+    .dx-state[data-state="working"] { background:var(--pos-soft); color:var(--pos); border-color:color-mix(in srgb,var(--pos) 35%,transparent); }
+    .dx-state[data-state="done"] { background:var(--brand-soft); color:var(--brand); border-color:color-mix(in srgb,var(--brand) 35%,transparent); }
+    .dx-state[data-state="warn"] { background:var(--warn-soft); color:var(--warn); border-color:color-mix(in srgb,var(--warn) 35%,transparent); }
+    .dx-clock { font-size:clamp(2.6rem,9vw,3.4rem); font-weight:600; line-height:1; letter-spacing:-.02em; color:var(--ink); }
+    .dx-clock small { font-size:1.2rem; font-weight:500; color:var(--ink-3); margin-left:.15rem; }
+    .dx-times { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+    .dx-times > div { padding:.6rem .7rem; background:var(--surface-2); }
+    .dx-times > div + div { border-left:1px solid var(--line); }
+    .dx-times span { display:block; font-size:.74rem; color:var(--ink-3); }
+    .dx-times b { display:block; font-size:1.05rem; font-weight:600; color:var(--ink); }
+    .dx-punch-actions { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+    .dx-punch-btn { display:flex; align-items:center; justify-content:center; gap:.6rem; min-height:60px; border-radius:10px; font-size:1.02rem; font-weight:600; cursor:pointer; background:var(--surface); border:2px solid var(--line-strong); color:var(--ink-2); transition:background-color .15s ease,border-color .15s ease,color .15s ease; }
+    .dx-punch-btn i { font-size:1.15rem; }
+    .dx-punch-btn[data-punch-action="in"] { border-color:color-mix(in srgb,var(--pos) 55%,transparent); color:var(--pos); }
+    .dx-punch-btn[data-punch-action="out"] { border-color:color-mix(in srgb,var(--warn) 55%,transparent); color:var(--warn); }
+    .dx-punch-btn[data-punch-action="in"][data-primary="true"] { background:var(--pos-btn); border-color:var(--pos-btn); color:#fff; }
+    .dx-punch-btn[data-punch-action="out"][data-primary="true"] { background:var(--warn-btn); border-color:var(--warn-btn); color:#fff; }
+    .dx-punch-btn:not([data-primary="true"]):hover { background:var(--surface-2); }
+    .dx-hint { font-size:.82rem; color:var(--ink-2); min-height:1.2em; }
+
+    /* KPI row */
+    .dx-kpis { display:grid; grid-template-columns:repeat(2,1fr); gap:.75rem; }
+    @media (min-width:1024px){ .dx-kpis { grid-template-columns:repeat(4,1fr); gap:1rem; } }
+    .dx-kpi { padding:1rem 1.1rem; border-left-width:4px; }
+    .dx-kpi.pos { border-left-color:var(--pos); } .dx-kpi.neg { border-left-color:var(--neg); }
+    .dx-kpi.ot { border-left-color:var(--warn-btn); } .dx-kpi.day { border-left-color:var(--btn); }
+    .dx-kpi .dx-label { font-size:.8rem; }
+    .dx-kpi-value { font-size:1.45rem; font-weight:600; line-height:1.25; margin-top:.2rem; color:var(--ink); }
+    .dx-kpi-value small { font-size:.8rem; font-weight:500; color:var(--ink-3); margin-left:.25rem; }
+    .dx-kpi.pos .dx-kpi-value { color:var(--pos); } .dx-kpi.neg .dx-kpi-value { color:var(--neg); }
+    .dx-kpi-sub { font-size:.76rem; color:var(--ink-3); margin-top:.15rem; line-height:1.4; }
+
+    /* Shortcut cards */
+    .dx-links { display:grid; grid-template-columns:1fr; gap:.75rem; }
+    @media (min-width:768px){ .dx-links { grid-template-columns:repeat(3,1fr); gap:1rem; } }
+    .dx-link { display:flex; align-items:center; gap:.9rem; text-align:left; width:100%; padding:1rem 1.1rem; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); cursor:pointer; transition:border-color .15s ease,background-color .15s ease; }
+    .dx-link:hover { border-color:var(--brand); background:var(--brand-soft); }
+    .dx-link-icon { width:2.6rem; height:2.6rem; flex:none; display:grid; place-items:center; border-radius:10px; background:var(--brand-soft); color:var(--brand); font-size:1.05rem; }
+    .dx-link b { display:block; font-size:.95rem; font-weight:600; color:var(--ink); }
+    .dx-link span.m { display:block; font-size:.78rem; color:var(--ink-3); margin-top:.1rem; line-height:1.4; }
+    .dx-link > i.fa-chevron-right { margin-left:auto; color:var(--ink-3); font-size:.8rem; }
+
+    /* ============================================================
+       Mobile bottom navigation + punch sheet
+       ============================================================ */
+    .bn { display:none; }
+    @media (max-width:767px){
+      .bn { display:grid; grid-template-columns:repeat(5,1fr); align-items:end; position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--surface); border-top:1px solid var(--line-strong); padding:.3rem .25rem calc(.3rem + env(safe-area-inset-bottom,0px)); box-shadow:0 -4px 18px rgba(14,42,71,.12); }
+      main { padding-bottom:calc(5.8rem + env(safe-area-inset-bottom,0px)) !important; padding-left:.8rem !important; padding-right:.8rem !important; }
+    }
+    .bn button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.15rem; min-height:54px; padding:.25rem .1rem; font-size:.68rem; font-weight:500; color:var(--ink-3); background:transparent; border-radius:10px; }
+    .bn button i { font-size:1.15rem; }
+    .bn button.is-active { color:var(--brand); font-weight:600; }
+    .bn button.is-active i { transform:translateY(-1px); }
+    .bn .bn-punch { position:relative; color:var(--ink); font-weight:600; }
+    .bn .bn-punch i { width:3.1rem; height:3.1rem; display:grid; place-items:center; margin-top:-1.25rem; border-radius:50%; background:var(--btn); color:#fff; font-size:1.3rem; border:4px solid var(--surface); box-shadow:0 4px 12px rgba(14,42,71,.3); }
+
+    .ps { position:fixed; inset:0; z-index:55; }
+    .ps.hidden { display:none; }
+    .ps-backdrop { position:absolute; inset:0; background:rgba(6,16,32,.55); }
+    .ps-panel { position:absolute; left:0; right:0; bottom:0; background:var(--surface); color:var(--ink); border-radius:18px 18px 0 0; padding:.6rem 1rem calc(1.1rem + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--line-strong); display:flex; flex-direction:column; gap:.85rem; max-width:560px; margin:0 auto; animation:psUp .22s ease both; }
+    @keyframes psUp { from{transform:translateY(30px);opacity:.5} to{transform:none;opacity:1} }
+    .ps-grab { width:2.5rem; height:4px; border-radius:2px; background:var(--line-strong); margin:0 auto .2rem; }
+    .ps-panel h3 { font-size:1.05rem; font-weight:600; }
+    .ps-panel .sub { font-size:.8rem; color:var(--ink-3); margin-top:-.5rem; }
+    @media (min-width:768px){ .ps { display:none !important; } }
+
+    @media (max-width:640px){
+      .dx-hello { font-size:1.25rem; }
+      .dx-greet .dx-btn { width:100%; }
+    }
+    @media (prefers-reduced-motion:reduce){ *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+    @media print { body { background:#fff !important; } .bn, .ps { display:none !important; } }
+
+    /* ============================================================
+       Dark theme mapping for utility classes used by the original markup
+       ============================================================ */
+    html[data-theme="dark"] .bg-white { background-color:var(--surface) !important; }
+    html[data-theme="dark"] [class*="bg-slate-50"], html[data-theme="dark"] [class*="bg-slate-100"] { background-color:var(--surface-2) !important; }
+    html[data-theme="dark"] [class*="hover:bg-slate-50"]:hover, html[data-theme="dark"] [class*="hover:bg-white"]:hover { background-color:var(--surface-2) !important; }
+    html[data-theme="dark"] [class*="border-slate-"] { border-color:var(--line) !important; }
+    html[data-theme="dark"] [class*="text-slate-9"], html[data-theme="dark"] [class*="text-slate-8"], html[data-theme="dark"] [class*="text-slate-7"] { color:var(--ink) !important; }
+    html[data-theme="dark"] [class*="text-slate-6"], html[data-theme="dark"] [class*="text-slate-5"] { color:var(--ink-2) !important; }
+    html[data-theme="dark"] [class*="text-slate-4"] { color:var(--ink-3) !important; }
+    html[data-theme="dark"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color:var(--line) !important; }
+    html[data-theme="dark"] .bg-white\/60, html[data-theme="dark"] .bg-white\/80 { background-color:var(--surface) !important; }
+    html[data-theme="dark"] .text-rose-500 { color:#f58a9c !important; }
+    html[data-theme="dark"] .text-blue-600, html[data-theme="dark"] .text-indigo-600 { color:var(--brand) !important; }
+    html[data-theme="dark"] .text-blue-700, html[data-theme="dark"] .text-blue-800, html[data-theme="dark"] .text-blue-900 { color:#9cc4f3 !important; }
+    html[data-theme="dark"] .text-indigo-700, html[data-theme="dark"] .text-indigo-800, html[data-theme="dark"] .text-indigo-900 { color:#b4bcf8 !important; }
+    html[data-theme="dark"] .text-emerald-600, html[data-theme="dark"] .text-emerald-700, html[data-theme="dark"] .text-emerald-800 { color:#5be0b6 !important; }
+    html[data-theme="dark"] .text-rose-600, html[data-theme="dark"] .text-rose-700, html[data-theme="dark"] .text-rose-800 { color:#f58a9c !important; }
+    html[data-theme="dark"] .text-amber-600, html[data-theme="dark"] .text-amber-700, html[data-theme="dark"] .text-amber-800, html[data-theme="dark"] .text-amber-900, html[data-theme="dark"] .text-orange-600, html[data-theme="dark"] .text-orange-700, html[data-theme="dark"] .text-orange-900 { color:#efc46f !important; }
+    html[data-theme="dark"] .text-purple-600, html[data-theme="dark"] .text-purple-700, html[data-theme="dark"] .text-purple-800, html[data-theme="dark"] .text-violet-700, html[data-theme="dark"] .text-violet-800, html[data-theme="dark"] .text-violet-900 { color:#c3b2f2 !important; }
+    html[data-theme="dark"] .text-cyan-700, html[data-theme="dark"] .text-cyan-800, html[data-theme="dark"] .text-sky-700, html[data-theme="dark"] .text-sky-900 { color:#7fd6ea !important; }
+    html[data-theme="dark"] [class*="bg-emerald-100"] { background-color:rgba(55,196,156,.18) !important; }
+    html[data-theme="dark"] [class*="bg-rose-100"] { background-color:rgba(242,122,143,.18) !important; }
+    html[data-theme="dark"] [class*="bg-amber-100"], html[data-theme="dark"] [class*="bg-orange-100"] { background-color:rgba(227,173,76,.2) !important; }
+    html[data-theme="dark"] [class*="bg-blue-100"], html[data-theme="dark"] [class*="bg-cyan-100"], html[data-theme="dark"] [class*="bg-indigo-100"] { background-color:rgba(106,168,238,.2) !important; }
+    html[data-theme="dark"] [class*="bg-purple-100"], html[data-theme="dark"] [class*="bg-violet-100"] { background-color:rgba(160,140,230,.2) !important; }
+    html[data-theme="dark"] [class*="border-emerald-"], html[data-theme="dark"] [class*="border-rose-"], html[data-theme="dark"] [class*="border-amber-"], html[data-theme="dark"] [class*="border-blue-"], html[data-theme="dark"] [class*="border-orange-"], html[data-theme="dark"] [class*="border-purple-"], html[data-theme="dark"] [class*="border-violet-"], html[data-theme="dark"] [class*="border-sky-"], html[data-theme="dark"] [class*="border-cyan-"], html[data-theme="dark"] [class*="border-indigo-"] { border-color:var(--line-strong) !important; }
+    html[data-theme="dark"] main [class~="bg-emerald-50"], html[data-theme="dark"] main [class~="bg-orange-50"], html[data-theme="dark"] main [class~="bg-blue-50"], html[data-theme="dark"] main [class~="bg-amber-50"], html[data-theme="dark"] main [class~="bg-purple-50"], html[data-theme="dark"] main [class~="bg-cyan-50"], html[data-theme="dark"] main [class~="bg-rose-50"], html[data-theme="dark"] main [class~="bg-indigo-50"], html[data-theme="dark"] main [class~="bg-violet-50"], html[data-theme="dark"] main [class~="bg-sky-50"] { border-color:var(--line) !important; }
+    html[data-theme="dark"] main [class~="bg-emerald-50"] { border-left-color:var(--pos) !important; }
+    html[data-theme="dark"] main [class~="bg-orange-50"], html[data-theme="dark"] main [class~="bg-amber-50"] { border-left-color:var(--warn) !important; }
+    html[data-theme="dark"] main [class~="bg-rose-50"] { border-left-color:var(--neg) !important; }
+    html[data-theme="dark"] main [class~="bg-blue-50"], html[data-theme="dark"] main [class~="bg-indigo-50"], html[data-theme="dark"] main [class~="bg-sky-50"], html[data-theme="dark"] main [class~="bg-cyan-50"] { border-left-color:var(--brand) !important; }
+    html[data-theme="dark"] .bg-slate-900\/60 { background-color:rgba(3,10,22,.7) !important; }
+    html[data-theme="dark"] .ring-blue-500 { --tw-ring-color:var(--brand) !important; }
 
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-full flex flex-col">
 
     <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-800 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/10">
-                    <i class="fa-solid fa-calculator text-2xl text-white"></i>
-                </div>
+    <header class="av-header">
+        <div class="av-header-inner">
+            <div class="av-brand">
+                <span class="av-logo" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">AOTAVSEC Salary & Attendance</h1>
-                    <p class="text-xs sm:text-sm text-blue-100">ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล · Premium Corporate UI v3.3</p>
+                    <h1>AOTAVSEC Salary &amp; Attendance</h1>
+                    <p>ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล</p>
                 </div>
             </div>
-            <div class="flex items-center flex-wrap gap-2">
-                <button onclick="app.quickTodayCheckIn()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md transition duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-right-to-bracket"></i> Check In วันนี้
-                </button>
-                <button onclick="app.quickTodayCheckOut()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md transition duration-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-right-from-bracket"></i> Check Out วันนี้
-                </button>
-                <button id="avThemeToggle" type="button" onclick="toggleAvTheme()" title="สลับ Dark Mode / Light Mode" aria-label="สลับธีม" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-semibold border border-white/20"><i id="avThemeIcon" class="fa-solid fa-moon mr-1"></i><span id="avThemeLabel">Dark Mode</span></button>
-                <button onclick="app.syncNow()" title="ซิงก์ข้อมูลกับ Google Sheets" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-semibold border border-white/20"><i class="fa-solid fa-rotate mr-1"></i> ซิงก์</button>
+            <div class="av-actions">
+                <button onclick="app.quickTodayCheckIn()" class="hd-btn hd-btn-in md-only"><i class="fa-solid fa-right-to-bracket"></i> Check In วันนี้</button>
+                <button onclick="app.quickTodayCheckOut()" class="hd-btn hd-btn-out md-only"><i class="fa-solid fa-right-from-bracket"></i> Check Out วันนี้</button>
+                <button onclick="app.syncNow()" title="ซิงก์ข้อมูลกับ Google Sheets" class="hd-btn"><i class="fa-solid fa-rotate"></i> ซิงก์</button>
                 <span id="syncStatus" role="button" tabindex="0" title="คลิกเพื่อดูสถานะและข้อมูลขัดแย้ง" class="cursor-pointer text-xs px-2 py-1 rounded-lg bg-white/15 border border-white/20">กำลังเชื่อมต่อฐานข้อมูล…</span>
-                <button onclick="app.resetForm()" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition duration-200 border border-white/20 flex items-center gap-1.5">
-                    <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
-                </button>
+                <button onclick="app.resetForm()" class="hd-btn md-only"><i class="fa-solid fa-rotate-right"></i> รีเซ็ต</button>
+                <button onclick="app.toggleTheme()" class="hd-btn md-only" aria-label="สลับธีมสว่าง/มืด"><i class="fa-solid fa-circle-half-stroke"></i> <span data-theme-label>ธีมมืด</span></button>
             </div>
         </div>
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-4 sm:space-x-8 overflow-x-auto">
-            <button onclick="app.switchTab('dashboard')" id="tab-dashboard" class="py-4 px-2 border-b-2 font-medium text-sm border-blue-600 text-blue-600 flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-gauge-high"></i> หน้าหลัก</button>
-            <button onclick="app.switchTab('calculator')" id="tab-calculator" class="py-4 px-2 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-file-invoice-dollar"></i> คำนวณเงินเดือน
-            </button>
-            <button onclick="app.switchTab('calendar')" id="tab-calendar" class="py-4 px-2 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-calendar-days"></i> ปฏิทินเข้า-ออกงาน & ค่ากะ
-            </button>
-            <button onclick="app.switchTab('history')" id="tab-history" class="py-4 px-2 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-list-check"></i> ประวัติสลิปเงินเดือน
-            </button>
-            <button onclick="app.switchTab('reports')" id="tab-reports" class="py-4 px-2 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-chart-column"></i> รายงาน / ส่งออก
-            </button>
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30" aria-label="เมนูหลัก">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto">
+            <button onclick="app.switchTab('dashboard')" id="tab-dashboard" class="av-tab is-active" aria-current="page"><i class="fa-solid fa-gauge-high"></i> หน้าหลัก</button>
+            <button onclick="app.switchTab('calculator')" id="tab-calculator" class="av-tab"><i class="fa-solid fa-file-invoice-dollar"></i> คำนวณเงินเดือน</button>
+            <button onclick="app.switchTab('calendar')" id="tab-calendar" class="av-tab"><i class="fa-solid fa-calendar-days"></i> ปฏิทินเข้า-ออกงาน &amp; ค่ากะ</button>
+            <button onclick="app.switchTab('history')" id="tab-history" class="av-tab"><i class="fa-solid fa-list-check"></i> ประวัติสลิปเงินเดือน</button>
+            <button onclick="app.switchTab('reports')" id="tab-reports" class="av-tab"><i class="fa-solid fa-chart-column"></i> รายงาน / ส่งออก</button>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 sm:pb-8">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- v3.3 Dashboard: display-only summaries mirrored from existing calculator and attendance data -->
-        <section id="view-dashboard" class="space-y-6">
-            <div class="rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
-                <div class="p-5 sm:p-7 text-white" style="background:linear-gradient(115deg,#10233f 0%,#1c4777 62%,#0f777b 100%)">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div><p class="text-xs uppercase tracking-[.18em] text-blue-100 mb-2">AOTAVSEC · PREMIUM CORPORATE</p><h2 class="text-2xl sm:text-3xl font-bold">ภาพรวมการทำงาน</h2><p class="text-sm text-blue-100 mt-2">เงินเดือน · การลงเวลา · OT · ประวัติ</p></div>
-                        <div class="flex flex-wrap gap-2"><button onclick="app.quickTodayCheckIn()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-xl text-sm font-semibold"><i class="fa-solid fa-right-to-bracket mr-2"></i>Check-in</button><button onclick="app.quickTodayCheckOut()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-xl text-sm font-semibold"><i class="fa-solid fa-right-from-bracket mr-2"></i>Check-out + OT</button></div>
+        <!-- Tab 0: Dashboard -->
+        <div id="view-dashboard" class="space-y-5">
+
+            <section class="dx-greet" aria-label="ทักทาย">
+                <div>
+                    <p class="dx-date" id="dxDate">&nbsp;</p>
+                    <h2 class="dx-hello">สวัสดี <span id="dxName">-</span></h2>
+                    <p class="dx-meta" id="dxMeta">-</p>
+                </div>
+                <button type="button" class="dx-btn dx-btn-ghost" onclick="app.switchTab('calculator')"><i class="fa-solid fa-sliders"></i> ปรับตัวเลข / ดูสูตรคำนวณ</button>
+            </section>
+
+            <section class="dx-hero">
+                <!-- Check-in / Check-out -->
+                <article class="dx-card dx-punch" id="dxPunch" aria-label="ลงเวลาวันนี้">
+                    <div class="dx-punch-head">
+                        <span class="dx-label">ลงเวลาวันนี้</span>
+                        <span class="dx-state" data-punch-state data-state="idle">ยังไม่ได้ลงเวลา</span>
                     </div>
+                    <div class="dx-clock" aria-live="off"><span data-clock-hm>--:--</span><small data-clock-s>:--</small></div>
+                    <div class="dx-times">
+                    <div><span>เข้างาน</span><b data-punch-in>--:--</b></div>
+                    <div><span>ออกงาน</span><b data-punch-out>--:--</b></div>
+                    <div><span>ทำงาน</span><b data-punch-hours>-</b></div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-slate-200">
-                    <div class="bg-white p-4 sm:p-5"><p class="text-xs text-slate-500 mb-1">พนักงาน</p><p id="dashEmployee" class="font-semibold text-slate-900 break-words">—</p><p id="dashPosition" class="text-xs text-slate-500 mt-1">—</p></div>
-                    <div class="bg-white p-4 sm:p-5"><p class="text-xs text-slate-500 mb-1">งวดเงินเดือน</p><p id="dashPeriod" class="font-semibold text-slate-900">—</p><p class="text-xs text-slate-500 mt-1">อ้างอิงข้อมูลในเครื่องคำนวณเดิม</p></div>
-                    <div class="bg-white p-4 sm:p-5"><p class="text-xs text-slate-500 mb-1">สถานะฐานข้อมูล</p><p id="dashSyncText" class="font-semibold text-slate-900">กำลังตรวจสอบ…</p><p class="text-xs text-slate-500 mt-1">ตรวจสอบรายละเอียดได้ที่แถบด้านบน</p></div>
+                    <div class="dx-punch-actions">
+                        <button type="button" class="dx-punch-btn" data-punch-action="in" data-primary="true" onclick="app.quickTodayCheckIn()"><i class="fa-solid fa-right-to-bracket"></i><span>Check In</span></button>
+                        <button type="button" class="dx-punch-btn" data-punch-action="out" onclick="app.quickTodayCheckOut()"><i class="fa-solid fa-right-from-bracket"></i><span>Check Out</span></button>
+                    </div>
+                    <p class="dx-hint" data-punch-hint>แตะ Check In เพื่อบันทึกเวลาเข้างานวันนี้</p>
+                </article>
+
+                <!-- Net salary -->
+                <article class="dx-card dx-net" aria-label="เงินเดือนสุทธิ">
+                    <div class="dx-label">เงินเดือนสุทธิ งวด <span id="dxPeriod">-</span></div>
+                    <div class="dx-net-figure"><span id="dxNet">0.00</span><small>บาท</small></div>
+                    <div>
+                        <div class="dx-split" role="img" id="dxSplit" aria-label="สัดส่วนเงินสุทธิต่อรายรับรวม"><i class="net" id="dxBarNet" style="width:0%"></i><i class="ded" id="dxBarDed" style="width:0%"></i></div>
+                        <div class="dx-split-legend" style="margin-top:.6rem">
+                            <span><i class="dot net"></i>ได้รับสุทธิ<b id="dxPctNet">0%</b></span>
+                            <span><i class="dot ded"></i>ถูกหัก<b id="dxPctDed">0%</b></span>
+                        </div>
+                    </div>
+                    <div class="dx-net-actions">
+                        <button type="button" class="dx-btn dx-btn-solid" onclick="app.saveRecord()"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</button>
+                        <button type="button" class="dx-btn dx-btn-onnavy" onclick="app.openPayslipModal()"><i class="fa-solid fa-print"></i> ดูสลิปเงินเดือน</button>
+                    </div>
+                </article>
+            </section>
+
+            <section class="dx-kpis" aria-label="ตัวเลขสำคัญ">
+                <div class="dx-card dx-kpi pos">
+                    <div class="dx-label">รายรับรวม</div>
+                    <div class="dx-kpi-value"><span id="dxIncome">0.00</span><small>฿</small></div>
+                    <div class="dx-kpi-sub" id="dxIncomeSub">-</div>
                 </div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">เงินสุทธิประมาณการ</p><span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center"><i class="fa-solid fa-wallet"></i></span></div><p id="dashNet" class="text-2xl font-bold text-slate-900 mt-3">฿0.00</p><button onclick="app.switchTab('calculator')" class="text-xs text-blue-700 font-semibold mt-3">ดูรายละเอียดเงินเดือน <i class="fa-solid fa-arrow-right ml-1"></i></button></article>
-                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">รายรับรวม</p><span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></span></div><p id="dashIncome" class="text-2xl font-bold text-slate-900 mt-3">฿0.00</p><p class="text-xs text-slate-500 mt-3">ตามสูตรคำนวณเดิม</p></article>
-                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">รายการหักรวม</p><span class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center"><i class="fa-solid fa-file-invoice"></i></span></div><p id="dashDeduction" class="text-2xl font-bold text-slate-900 mt-3">฿0.00</p><p class="text-xs text-slate-500 mt-3">ตามสูตรคำนวณเดิม</p></article>
-                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">OT ในเครื่องคำนวณ</p><span class="w-10 h-10 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center"><i class="fa-solid fa-clock"></i></span></div><p id="dashOtHours" class="text-2xl font-bold text-slate-900 mt-3">0 ชม.</p><p class="text-xs text-slate-500 mt-3">ตรวจสอบประเภท OT ในหน้าคำนวณ</p></article>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                <section class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6"><div class="flex items-center justify-between mb-4"><div><h3 class="text-lg font-semibold text-slate-900">ทางลัดการใช้งาน</h3><p class="text-xs text-slate-500 mt-1">ไปยังส่วนที่ใช้บ่อยได้ทันที</p></div><i class="fa-solid fa-bolt text-blue-600 text-xl"></i></div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><button onclick="app.switchTab('calculator')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-calculator text-blue-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">คำนวณเงินเดือน</span><span class="block text-xs text-slate-500 mt-1">รายรับ รายการหัก และเงินสุทธิ</span></button><button onclick="app.switchTab('calendar')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-calendar-days text-emerald-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">ปฏิทินลงเวลา</span><span class="block text-xs text-slate-500 mt-1">ดูวันทำงานและเวลาเข้า–ออก</span></button><button onclick="app.switchTab('history')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-clock-rotate-left text-violet-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">ประวัติสลิปเงินเดือน</span><span class="block text-xs text-slate-500 mt-1">ค้นหาและตรวจสอบรายการที่บันทึก</span></button><button onclick="app.switchTab('reports')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-chart-column text-amber-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">รายงานและส่งออก</span><span class="block text-xs text-slate-500 mt-1">สรุปรายเดือนและสำรองข้อมูล</span></button></div>
-                </section>
-                <section class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6"><div class="flex items-center justify-between mb-4"><div><h3 class="text-lg font-semibold text-slate-900">การลงเวลาวันนี้</h3><p id="dashTodayDate" class="text-xs text-slate-500 mt-1">—</p></div><i class="fa-solid fa-calendar-check text-emerald-600 text-xl"></i></div><div class="space-y-3"><div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3"><span class="text-sm text-slate-500">เวลาเข้า</span><strong id="dashCheckIn" class="text-slate-900">ยังไม่มีข้อมูล</strong></div><div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3"><span class="text-sm text-slate-500">เวลาออก</span><strong id="dashCheckOut" class="text-slate-900">ยังไม่มีข้อมูล</strong></div><div class="flex items-center justify-between gap-3"><span class="text-sm text-slate-500">OT วันนี้</span><strong id="dashTodayOt" class="text-slate-900">—</strong></div></div><button onclick="app.switchTab('calendar')" class="mt-5 w-full rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm px-4 py-3"><i class="fa-solid fa-calendar-days mr-2"></i>เปิดปฏิทิน</button></section>
-            </div>
-        </section>
+                <div class="dx-card dx-kpi neg">
+                    <div class="dx-label">รายการหักรวม</div>
+                    <div class="dx-kpi-value"><span id="dxDeduction">0.00</span><small>฿</small></div>
+                    <div class="dx-kpi-sub" id="dxDeductionSub">-</div>
+                </div>
+                <div class="dx-card dx-kpi ot">
+                    <div class="dx-label">ชั่วโมง OT</div>
+                    <div class="dx-kpi-value"><span id="dxOtHours">0</span><small>ชม.</small></div>
+                    <div class="dx-kpi-sub" id="dxOtSub">-</div>
+                </div>
+                <div class="dx-card dx-kpi day">
+                    <div class="dx-label">วันทำงานปกติ</div>
+                    <div class="dx-kpi-value"><span id="dxWorkDays">0</span><small>วัน</small></div>
+                    <div class="dx-kpi-sub" id="dxWorkSub">-</div>
+                </div>
+            </section>
+
+            <section class="dx-links" aria-label="ทางลัด">
+                <button type="button" class="dx-link" onclick="app.switchTab('calendar')">
+                    <span class="dx-link-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                    <span><b>ปฏิทินเข้า-ออกงาน</b><span class="m" id="dxCalMeta">เปิดดูและแก้ไขเวลาทำงานรายวัน</span></span>
+                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="dx-link" onclick="app.switchTab('history')">
+                    <span class="dx-link-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                    <span><b>ประวัติเงินเดือน</b><span class="m" id="dxHistMeta">ยังไม่มีสลิปที่บันทึก</span></span>
+                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="dx-link" onclick="app.switchTab('reports')">
+                    <span class="dx-link-icon"><i class="fa-solid fa-chart-column"></i></span>
+                    <span><b>รายงาน / ส่งออก</b><span class="m">สรุปรายเดือน รายปี ส่งออก PDF CSV Excel</span></span>
+                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </section>
+        </div>
 
         <!-- Tab 1: Calculator View -->
         <div id="view-calculator" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -635,15 +867,35 @@
 
     </main>
 
-    <nav id="avBottomNav" aria-label="เมนูหลักบนมือถือ" class="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg shadow-lg sm:hidden">
-      <div class="grid grid-cols-5 max-w-xl mx-auto px-2 py-2">
-        <button onclick="app.switchTab('dashboard')" data-av-bottom="dashboard" class="flex flex-col items-center gap-1 py-2 rounded-xl text-blue-700"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-semibold">หน้าหลัก</span></button>
-        <button onclick="app.switchTab('calendar')" data-av-bottom="calendar" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-calendar-days text-lg"></i><span class="text-[10px] font-semibold">ปฏิทิน</span></button>
-        <button onclick="app.switchTab('calculator')" data-av-bottom="calculator" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-calculator text-lg"></i><span class="text-[10px] font-semibold">เงินเดือน</span></button>
-        <button onclick="app.switchTab('history')" data-av-bottom="history" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-clock-rotate-left text-lg"></i><span class="text-[10px] font-semibold">ประวัติ</span></button>
-        <button onclick="app.switchTab('reports')" data-av-bottom="reports" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-chart-column text-lg"></i><span class="text-[10px] font-semibold">รายงาน</span></button>
-      </div>
+    <!-- Mobile bottom navigation -->
+    <nav class="bn" id="bottomNav" aria-label="เมนูด้านล่าง">
+        <button type="button" data-nav="dashboard" onclick="app.switchTab('dashboard')" class="is-active" aria-current="page"><i class="fa-solid fa-house"></i><span>หน้าหลัก</span></button>
+        <button type="button" data-nav="history" onclick="app.switchTab('history')"><i class="fa-solid fa-clock-rotate-left"></i><span>ประวัติ</span></button>
+        <button type="button" class="bn-punch" onclick="app.openPunchSheet()" aria-haspopup="dialog"><i class="fa-solid fa-fingerprint"></i><span>ลงเวลา</span></button>
+        <button type="button" data-nav="reports" onclick="app.switchTab('reports')"><i class="fa-solid fa-chart-column"></i><span>รายงาน</span></button>
+        <button type="button" onclick="app.toggleTheme()" aria-label="สลับธีมสว่าง/มืด"><i class="fa-solid fa-circle-half-stroke"></i><span data-theme-label>ธีมมืด</span></button>
     </nav>
+
+    <!-- Mobile punch sheet (calls the original quick check-in / check-out flow) -->
+    <div id="punchSheet" class="ps hidden" role="dialog" aria-modal="true" aria-labelledby="psTitle">
+        <div class="ps-backdrop" onclick="app.closePunchSheet()"></div>
+        <div class="ps-panel">
+            <div class="ps-grab"></div>
+            <div class="dx-punch-head"><h3 id="psTitle">ลงเวลาวันนี้</h3><span class="dx-state" data-punch-state data-state="idle">ยังไม่ได้ลงเวลา</span></div>
+            <p class="sub" data-date-label>&nbsp;</p>
+            <div class="dx-times">
+                    <div><span>เข้างาน</span><b data-punch-in>--:--</b></div>
+                    <div><span>ออกงาน</span><b data-punch-out>--:--</b></div>
+                    <div><span>ทำงาน</span><b data-punch-hours>-</b></div>
+                </div>
+            <div class="dx-punch-actions">
+                <button type="button" class="dx-punch-btn" data-punch-action="in" data-primary="true" onclick="app.closePunchSheet(); app.quickTodayCheckIn()"><i class="fa-solid fa-right-to-bracket"></i><span>Check In</span></button>
+                <button type="button" class="dx-punch-btn" data-punch-action="out" onclick="app.closePunchSheet(); app.quickTodayCheckOut()"><i class="fa-solid fa-right-from-bracket"></i><span>Check Out</span></button>
+            </div>
+            <p class="dx-hint" data-punch-hint></p>
+            <button type="button" class="dx-btn dx-btn-ghost" onclick="app.closePunchSheet(); app.switchTab('calendar')"><i class="fa-solid fa-calendar-days"></i> เปิดปฏิทินเพื่อแก้ไขย้อนหลัง</button>
+        </div>
+    </div>
 
 
     <!-- Quick Check In / Check Out workflow -->
@@ -1228,14 +1480,12 @@
 
             switchTab(tab) {
                 const views = {
-                    dashboard: document.getElementById('view-dashboard'),
                     calculator: document.getElementById('view-calculator'),
                     calendar: document.getElementById('view-calendar'),
                     history: document.getElementById('view-history'),
                     reports: document.getElementById('view-reports')
                 };
                 const tabs = {
-                    dashboard: document.getElementById('tab-dashboard'),
                     calculator: document.getElementById('tab-calculator'),
                     calendar: document.getElementById('tab-calendar'),
                     history: document.getElementById('tab-history'),
@@ -1252,7 +1502,6 @@
                     }
                 });
 
-                if (window.refreshAvDashboard) window.refreshAvDashboard();
                 if (tab === 'calendar') this.renderCalendar();
                 if (tab === 'history') this.renderHistory();
                 if (tab === 'reports') this.renderReport();
@@ -1398,7 +1647,7 @@
                         labels: ['รายรับรวม', 'รายการหักรวม', 'เงินสุทธิ'],
                         datasets: [{
                             data: [income, deduction, net],
-                            backgroundColor: ['#10b981', '#f43f5e', '#3b82f6'],
+                            backgroundColor: ['#0b7a5e', '#b3263e', '#1b4b82'],
                             borderWidth: 0
                         }]
                     },
@@ -2167,9 +2416,7 @@
                 const money = n => (Number(n)||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
                 const esc = v => this.escapeHtml(v);
                 const pages = slips.map((r,i) => `<section class="slip ${i ? 'page-break' : ''}"><header><div><h1>AOTAVSEC · Salary & Attendance</h1><p>สลิปสรุปเงินเดือนส่วนบุคคล</p></div><div class="right"><h2>${esc(r.period || '-')}</h2><span class="status ${r.salaryStatus==='confirmed'?'confirmed':'estimated'}">${r.salaryStatus==='confirmed'?'ยืนยันแล้ว':'ประมาณการ'}</span></div></header><div class="person"><div><small>ชื่อพนักงาน</small><b>${esc(r.name||'-')}</b></div><div><small>ตำแหน่ง</small><b>${esc(r.position||'-')}</b></div><div><small>วันที่บันทึก</small><b>${esc(r.date||'-')}</b></div><div><small>วันทำงาน</small><b>${esc(r.workDays??'-')}</b></div></div><table><thead><tr><th>รายการรายรับ / รายการหัก</th><th class="right">จำนวนเงิน (บาท)</th></tr></thead><tbody><tr><td>เงินเดือนตั้งต้น</td><td class="right">${money(r.baseSalary)}</td></tr><tr><td>รายรับรายวันรวม</td><td class="right">${money((Number(r.dailyIncomeRate)||0)*(Number(r.workDays)||0))}</td></tr><tr><td>ค่าเข้ากะ</td><td class="right">${money(r.shiftAllowance)}</td></tr><tr><td>ค่าล่วงเวลา OT (${money(r.otHoursTotal??r.otHours)} ชม.)</td><td class="right">${money(r.otPay)}</td></tr><tr><td>ค่าคอมมิชชั่น / เบี้ยเลี้ยง / รายรับอื่น</td><td class="right">${money((Number(r.commission)||0)+(Number(r.allowance)||0)+(Number(r.otherIncome)||0))}</td></tr><tr class="total"><td>รายรับรวม</td><td class="right">${money(r.totalIncome)}</td></tr><tr><td>ประกันสังคม</td><td class="right">${money(r.socialSecurity)}</td></tr><tr><td>หักเบี้ยสำรองชีพ</td><td class="right">${money(r.tax)}</td></tr><tr><td>รายการหักอื่น ๆ</td><td class="right">${money(Math.max(0,(Number(r.totalDeduction)||0)-(Number(r.socialSecurity)||0)-(Number(r.tax)||0)))}</td></tr><tr class="total"><td>รายการหักรวม</td><td class="right">${money(r.totalDeduction)}</td></tr></tbody></table><div class="net"><span>เงินสุทธิ</span><strong>${money(r.netSalary)} บาท</strong></div><p class="note">เอกสารนี้สร้างจากข้อมูลที่บันทึกในแอป ไม่ใช่เอกสารรับรองจากนายจ้าง และสถานะ “ยืนยันแล้ว” เป็นสถานะที่ผู้ใช้กำหนดเอง</p></section>`).join('');
-                win.document.open(); win.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,'Tahoma',sans-serif;color:#1e293b;margin:0;font-size:12px}.slip{padding:2mm}.page-break{break-before:page;page-break-before:always}header{display:flex;justify-content:space-between;border-bottom:2px solid #2563eb;padding-bottom:12px;margin-bottom:18px}h1{font-size:19px;margin:0 0 5px}h2{font-size:16px;margin:0 0 8px}p{margin:0;color:#64748b}.right{text-align:right}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px}.confirmed{background:#dcfce7;color:#166534}.estimated{background:#fef3c7;color:#92400e}.person{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f8fafc;padding:14px;border-radius:8px;margin-bottom:18px}.person small{display:block;color:#64748b;margin-bottom:5px}.person b{font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f1f5f9}.total{font-weight:bold;background:#f8fafc}.net{margin-top:18px;padding:16px;background:#0f172a;color:white;border-radius:8px;display:flex;justify-content:space-between;align-items:center}.net strong{font-size:21px;color:#6ee7b7}.note{margin-top:14px;font-size:10px}@media screen{body{max-width:850px;margin:24px auto;padding:20px}.slip{border:1px solid #ddd;margin-bottom:20px;padding:25px}.page-break{border-top:3px dashed #aaa;padding-top:25px}}@media print{.page-break{break-before:page}}</style></head><body>${pages}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script>
-
-</body></html>`); win.document.close();
+                win.document.open(); win.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,'Tahoma',sans-serif;color:#1e293b;margin:0;font-size:12px}.slip{padding:2mm}.page-break{break-before:page;page-break-before:always}header{display:flex;justify-content:space-between;border-bottom:2px solid #2563eb;padding-bottom:12px;margin-bottom:18px}h1{font-size:19px;margin:0 0 5px}h2{font-size:16px;margin:0 0 8px}p{margin:0;color:#64748b}.right{text-align:right}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px}.confirmed{background:#dcfce7;color:#166534}.estimated{background:#fef3c7;color:#92400e}.person{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f8fafc;padding:14px;border-radius:8px;margin-bottom:18px}.person small{display:block;color:#64748b;margin-bottom:5px}.person b{font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f1f5f9}.total{font-weight:bold;background:#f8fafc}.net{margin-top:18px;padding:16px;background:#0f172a;color:white;border-radius:8px;display:flex;justify-content:space-between;align-items:center}.net strong{font-size:21px;color:#6ee7b7}.note{margin-top:14px;font-size:10px}@media screen{body{max-width:850px;margin:24px auto;padding:20px}.slip{border:1px solid #ddd;margin-bottom:20px;padding:25px}.page-break{border-top:3px dashed #aaa;padding-top:25px}}@media print{.page-break{break-before:page}}</style></head><body>${pages}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script></body></html>`); win.document.close();
             }
 
             exportAnnualCsv() {
@@ -2313,48 +2560,190 @@
             }
         }
 
-        const app = new SalaryApp();
-    </script>
-<script>
-/* Theme preference only; does not modify salary or attendance data. */
-(function () {
-  const KEY = 'aotavsec_ui_theme';
-  function applyTheme(theme, save) {
-    const selected = theme === 'dark' ? 'dark' : 'light';
-    document.body.setAttribute('data-theme', selected);
-    document.documentElement.style.colorScheme = selected;
-    const icon = document.getElementById('avThemeIcon');
-    const label = document.getElementById('avThemeLabel');
-    const button = document.getElementById('avThemeToggle');
-    if (icon) icon.className = selected === 'dark' ? 'fa-solid fa-sun mr-1' : 'fa-solid fa-moon mr-1';
-    if (label) label.textContent = selected === 'dark' ? 'Light Mode' : 'Dark Mode';
-    if (button) button.setAttribute('aria-label', selected === 'dark' ? 'เปลี่ยนเป็น Light Mode' : 'เปลี่ยนเป็น Dark Mode');
-    if (save) { try { localStorage.setItem(KEY, selected); } catch (e) {} }
-  }
-  window.toggleAvTheme = function () { applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true); };
-  let saved = 'light';
-  try { saved = localStorage.getItem(KEY) || 'light'; } catch (e) {}
-  applyTheme(saved, false);
-})();
-</script>
+        
+        /* ============================================================
+           v4.0 Corporate Dashboard layer
+           Wraps/extends SalaryApp without changing the original formulas,
+           data keys, or the quick check-in / check-out workflow.
+           ============================================================ */
+        (function () {
+            const P = SalaryApp.prototype;
+            const $ = id => document.getElementById(id);
+            const setText = (id, text) => { const el = $(id); if (el) el.textContent = text; };
+            const pad = n => String(n).padStart(2, '0');
 
-<script>
-(function(){
- const el=id=>document.getElementById(id), val=id=>{const e=el(id);return e?String(e.value||'').trim():'';}, txt=id=>{const e=el(id);return e?(e.textContent||'').trim():'—';}, set=(id,v)=>{const e=el(id);if(e)e.textContent=v;};
- function dateKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
- function currency(id){let t=txt(id);if(!t||t==='—')return '฿0.00';return t.includes('฿')?t:'฿'+t;}
- window.refreshAvDashboard=function(){
-  set('dashEmployee',val('empName')||'ยังไม่ได้ระบุชื่อ');set('dashPosition',val('empPosition')||'ยังไม่ได้ระบุตำแหน่ง');set('dashPeriod',val('payPeriod')||'ยังไม่ได้ระบุงวด');
-  set('dashNet',currency('resNetSalary'));set('dashIncome',currency('resTotalIncome'));set('dashDeduction',currency('resTotalDeduction'));
-  let h=0;['otHours','otWeekdayHours','otHolidayHours','otHolidayOvertimeHours'].forEach(id=>{let n=Number(val(id));if(Number.isFinite(n)&&n>0)h+=n;});set('dashOtHours',h.toLocaleString('th-TH',{maximumFractionDigits:2})+' ชม.');
-  set('dashSyncText',txt('syncStatus')|| (navigator.onLine?'ออนไลน์':'ออฟไลน์'));let d=new Date();set('dashTodayDate',d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
-  let r=window.app&&app.attendanceData?app.attendanceData[dateKey()]:null;set('dashCheckIn',r&&(r.actualCheckIn||r.checkIn||r.checkInTime)?(r.actualCheckIn||r.checkIn||r.checkInTime):'ยังไม่มีข้อมูล');set('dashCheckOut',r&&(r.actualCheckOut||r.checkOut||r.checkOutTime)?(r.actualCheckOut||r.checkOut||r.checkOutTime):'ยังไม่มีข้อมูล');set('dashTodayOt',r&&r.otHours!==undefined?String(r.otHours)+' ชม.':'—');
-  document.querySelectorAll('[data-av-bottom]').forEach(b=>{let v=el('view-'+b.dataset.avBottom);if(v&&!v.classList.contains('hidden'))b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
- };
- ['empName','empPosition','payPeriod','otHours','otWeekdayHours','otHolidayHours','otHolidayOvertimeHours'].forEach(id=>{let e=el(id);if(e){e.addEventListener('input',window.refreshAvDashboard);e.addEventListener('change',window.refreshAvDashboard);}});
- ['resNetSalary','resTotalIncome','resTotalDeduction','syncStatus'].forEach(id=>{let e=el(id);if(e&&window.MutationObserver)new MutationObserver(window.refreshAvDashboard).observe(e,{childList:true,subtree:true,characterData:true});});
- window.addEventListener('load',()=>{window.refreshAvDashboard();setTimeout(window.refreshAvDashboard,250);});
-})();
-</script>
+            // Chart text colour follows the theme
+            const themeInk = () => document.documentElement.getAttribute('data-theme') === 'dark' ? '#b2c0d4' : '#42536a';
+            if (typeof Chart !== 'undefined') Chart.defaults.color = themeInk();
+
+            /* ---------- Dashboard figures (read from the existing calculate() result) ---------- */
+            P.renderDashboard = function (r) {
+                if (!r || !r.v) return;
+                const f = n => this.formatNumber(Number(n) || 0);
+                const trim = n => String(Math.round((Number(n) || 0) * 100) / 100);
+                const v = r.v;
+                setText('dxName', v.name);
+                setText('dxMeta', `${v.position} · งวด ${v.period}`);
+                setText('dxPeriod', v.period);
+                setText('dxNet', f(r.netSalary));
+                setText('dxIncome', f(r.totalIncome));
+                setText('dxDeduction', f(r.totalDeduction));
+                setText('dxIncomeSub', `รายวัน ${f(r.totalDailyIncome)} · OT ${f(r.otPay)}`);
+                setText('dxDeductionSub', `ประกันสังคม ${f(v.socialSecurity)} · สำรองชีพ ${f(r.tax)}`);
+                setText('dxOtHours', trim(r.otHoursTotal));
+                setText('dxOtSub', `ค่า OT ${f(r.otPay)} ฿ · อัตรา ${f(r.otRate)} ฿/ชม.`);
+                setText('dxWorkDays', trim(v.workDays));
+                setText('dxWorkSub', `อัตรา ${f(v.dailyIncomeRate)} ฿ ต่อวัน`);
+
+                const income = Number(r.totalIncome) || 0;
+                const netPct = income > 0 ? Math.max(0, Math.min(100, (r.netSalary / income) * 100)) : 0;
+                const dedPct = income > 0 ? 100 - netPct : 0;
+                const bn = $('dxBarNet'), bd = $('dxBarDed');
+                if (bn) bn.style.width = netPct.toFixed(1) + '%';
+                if (bd) bd.style.width = dedPct.toFixed(1) + '%';
+                setText('dxPctNet', netPct.toFixed(1) + '%');
+                setText('dxPctDed', dedPct.toFixed(1) + '%');
+                const split = $('dxSplit');
+                if (split) split.setAttribute('aria-label', `เงินสุทธิ ${netPct.toFixed(1)}% ถูกหัก ${dedPct.toFixed(1)}% ของรายรับรวม`);
+            };
+
+            /* ---------- Shortcut card summaries ---------- */
+            P.renderDashboardShortcuts = function () {
+                const present = $('calStatPresent')?.textContent || '0 วัน';
+                const ot = $('calStatOT')?.textContent || '0 ชม.';
+                const month = $('calendarMonthYear')?.textContent || '';
+                setText('dxCalMeta', `${month} · เข้างาน ${present} · OT ${ot}`);
+                const hist = Array.isArray(this.salaryHistory) ? this.salaryHistory : [];
+                if (!hist.length) { setText('dxHistMeta', 'ยังไม่มีสลิปที่บันทึก'); return; }
+                const latest = hist.reduce((a, b) => (Number(b.id) || 0) > (Number(a.id) || 0) ? b : a, hist[0]);
+                setText('dxHistMeta', `${hist.length} รายการ · ล่าสุด ${latest.period || '-'} สุทธิ ${this.formatNumber(Number(latest.netSalary) || 0)} ฿`);
+            };
+
+            /* ---------- Today's punch status (reads the existing attendance record) ---------- */
+            P.renderPunchStatus = function () {
+                const rec = (this.attendanceData && this.attendanceData[this.getTodayKey()]) || {};
+                const hasIn = !!rec.checkIn, hasOut = !!rec.checkOut;
+                let state = 'idle', label = 'ยังไม่ได้ลงเวลา', hint = 'แตะ Check In เพื่อบันทึกเวลาเข้างานวันนี้', primary = 'in', hours = '-';
+
+                if (hasIn && !hasOut) {
+                    const [h, m] = String(rec.checkIn).split(':').map(Number);
+                    const now = new Date();
+                    let mins = now.getHours() * 60 + now.getMinutes() - ((h || 0) * 60 + (m || 0));
+                    if (mins < 0) mins += 1440;
+                    hours = `${Math.floor(mins / 60)} ชม. ${mins % 60} น.`;
+                    state = 'working'; label = 'กำลังทำงาน'; primary = 'out';
+                    hint = `เข้างานตั้งแต่ ${rec.checkIn} น. เมื่อเลิกงานให้แตะ Check Out`;
+                } else if (hasIn && hasOut) {
+                    const d = calculateShiftDuration(rec.checkIn, rec.checkOut);
+                    hours = d && d.valid ? `${d.hours} ชม.` : '-';
+                    state = 'done'; label = 'ลงเวลาครบแล้ว'; primary = '';
+                    hint = `บันทึกครบแล้ว · OT ${Number(rec.otHours) || 0} ชม. แตะปุ่มเพื่อแก้ไขเวลา`;
+                } else if (!hasIn && hasOut) {
+                    state = 'warn'; label = 'ยังไม่มีเวลาเข้า'; primary = 'in';
+                    hint = 'มีเวลาออกงานแล้ว แต่ยังไม่มีเวลาเข้างาน';
+                } else if (rec.status === 'SICK_LEAVE' || rec.status === 'PERSONAL_LEAVE') {
+                    state = 'warn'; label = 'บันทึกเป็นวันลา'; hint = 'วันนี้บันทึกเป็นวันลา หากมาทำงานให้ Check In เพื่อแก้ไข';
+                } else if (rec.status === 'HOLIDAY') {
+                    state = 'warn'; label = 'บันทึกเป็นวันหยุด'; hint = 'วันนี้บันทึกเป็นวันหยุด หากทำงานให้ Check In เพื่อแก้ไข';
+                }
+
+                document.querySelectorAll('[data-punch-in]').forEach(el => el.textContent = hasIn ? rec.checkIn : '--:--');
+                document.querySelectorAll('[data-punch-out]').forEach(el => el.textContent = hasOut ? rec.checkOut : '--:--');
+                document.querySelectorAll('[data-punch-hours]').forEach(el => el.textContent = hours);
+                document.querySelectorAll('[data-punch-state]').forEach(el => { el.textContent = label; el.dataset.state = state; });
+                document.querySelectorAll('[data-punch-hint]').forEach(el => el.textContent = hint);
+                document.querySelectorAll('[data-punch-action]').forEach(btn => {
+                    btn.dataset.primary = String(btn.dataset.punchAction === primary);
+                });
+            };
+
+            P.renderClock = function () {
+                const d = new Date();
+                document.querySelectorAll('[data-clock-hm]').forEach(el => el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}`);
+                document.querySelectorAll('[data-clock-s]').forEach(el => el.textContent = `:${pad(d.getSeconds())}`);
+                const dateText = d.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                setText('dxDate', dateText);
+                document.querySelectorAll('[data-date-label]').forEach(el => el.textContent = dateText);
+                if (this._lastPunchMinute !== d.getMinutes()) { this._lastPunchMinute = d.getMinutes(); this.renderPunchStatus(); }
+            };
+
+            /* ---------- Mobile punch sheet ---------- */
+            P.openPunchSheet = function () {
+                this.renderClock(); this.renderPunchStatus();
+                $('punchSheet')?.classList.remove('hidden');
+            };
+            P.closePunchSheet = function () { $('punchSheet')?.classList.add('hidden'); };
+
+            /* ---------- Theme ---------- */
+            P.applyTheme = function (theme, persist = true) {
+                const t = theme === 'dark' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                if (persist) { try { localStorage.setItem('salary_theme', t); } catch (e) { /* storage unavailable */ } }
+                document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#0b2038' : '#0e2a47');
+                document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = t === 'dark' ? 'ธีมสว่าง' : 'ธีมมืด');
+                if (typeof Chart !== 'undefined') {
+                    Chart.defaults.color = themeInk();
+                    if (this.chart) {
+                        const legend = this.chart.options?.plugins?.legend;
+                        if (legend && legend.labels) legend.labels.color = themeInk();
+                        this.chart.update();
+                    }
+                }
+            };
+            P.toggleTheme = function () {
+                this.applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            };
+
+            /* ---------- Navigation (adds the dashboard, keeps the original render hooks) ---------- */
+            P.switchTab = function (tab) {
+                const names = ['dashboard', 'calculator', 'calendar', 'history', 'reports'];
+                if (!names.includes(tab)) tab = 'dashboard';
+                names.forEach(k => {
+                    $('view-' + k)?.classList.toggle('hidden', k !== tab);
+                    const t = $('tab-' + k);
+                    if (t) { t.classList.toggle('is-active', k === tab); if (k === tab) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); }
+                });
+                document.querySelectorAll('#bottomNav [data-nav]').forEach(b => {
+                    const on = b.dataset.nav === tab;
+                    b.classList.toggle('is-active', on);
+                    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+                });
+                if (tab === 'calendar') this.renderCalendar();
+                if (tab === 'history') this.renderHistory();
+                if (tab === 'reports') this.renderReport();
+                if (tab === 'calculator' && this.chart) this.chart.resize();
+                if (tab === 'dashboard') { this.renderDashboardShortcuts(); this.renderPunchStatus(); }
+                window.scrollTo({ top: 0, behavior: 'auto' });
+            };
+
+            /* ---------- Hooks: keep dashboard in sync whenever the originals run ---------- */
+            const origCalc = P.calculate;
+            P.calculate = function () {
+                const r = origCalc.apply(this, arguments);
+                try { this.renderDashboard(r); } catch (e) { console.warn('Dashboard update failed', e); }
+                return r;
+            };
+            const origCal = P.renderCalendar;
+            P.renderCalendar = function () {
+                const r = origCal.apply(this, arguments);
+                try { this.renderPunchStatus(); this.renderDashboardShortcuts(); } catch (e) { console.warn(e); }
+                return r;
+            };
+            const origHist = P.renderHistory;
+            P.renderHistory = function () {
+                const r = origHist.apply(this, arguments);
+                try { this.renderDashboardShortcuts(); } catch (e) { console.warn(e); }
+                return r;
+            };
+        })();
+
+
+        const app = new SalaryApp();
+        app.applyTheme(document.documentElement.getAttribute('data-theme'), false);
+        app.renderClock();
+        setInterval(() => app.renderClock(), 1000);
+        app.switchTab('dashboard');
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') app.closePunchSheet(); });
+    </script>
 </body>
 </html>
