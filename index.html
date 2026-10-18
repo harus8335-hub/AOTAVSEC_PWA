@@ -7,7 +7,7 @@
     <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v3.0 Phase 5">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
-    <title>AOTAVSEC Salary Calculator v3.0</title>
+    <title>AOTAVSEC Salary Calculator v3.2 Check In/Out Workflow</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
@@ -23,6 +23,72 @@
             #printable-payslip, #printable-payslip * { visibility: visible; }
             #printable-payslip { position: absolute; left: 0; top: 0; width: 100%; }
         }
+
+    /* AOTAVSEC UI/UX refresh v3.1 — visual layer only; existing IDs and handlers preserved */
+    :root { color-scheme: light; --av-navy:#10233f; --av-blue:#2457a7; --av-teal:#0f9f9a; --av-ink:#17263c; --av-muted:#64748b; --av-line:#e2e8f0; --av-surface:#ffffff; }
+    html { scroll-behavior:smooth; background:#f4f7fb; }
+    body { font-family:'Prompt',sans-serif; color:var(--av-ink); background:linear-gradient(180deg,#f4f7fb 0%,#f8fafc 36%,#f3f6fb 100%) !important; letter-spacing:.005em; }
+    body > header { background:linear-gradient(115deg,#10233f 0%,#183e70 60%,#126f7a 100%) !important; box-shadow:0 12px 32px rgba(15,35,65,.18) !important; }
+    body > header > div { padding-top:1.15rem !important; padding-bottom:1.15rem !important; }
+    body > header h1 { letter-spacing:-.025em; }
+    body > header .bg-white\/10 { background:rgba(255,255,255,.13) !important; border-color:rgba(255,255,255,.2) !important; }
+    body > header button { border-radius:12px !important; min-height:40px; transition:transform .18s ease,filter .18s ease,box-shadow .18s ease; }
+    body > header button:hover { transform:translateY(-1px); filter:brightness(1.04); }
+    body > nav { background:rgba(255,255,255,.94) !important; border-bottom:1px solid #dbe5f0 !important; box-shadow:0 5px 18px rgba(22,40,68,.055) !important; backdrop-filter:blur(14px); }
+    body > nav > div { gap:.35rem !important; padding-top:.45rem; padding-bottom:.45rem; }
+    body > nav button { border:0 !important; border-radius:12px 12px 10px 10px !important; padding:.8rem 1rem !important; color:#607087 !important; transition:background .18s ease,color .18s ease; }
+    body > nav button:hover { background:#f1f6fb !important; color:#1e4779 !important; }
+    body > nav button.border-blue-600 { background:#eaf3ff !important; color:#174b88 !important; box-shadow:inset 0 0 0 1px #d4e6ff; }
+    main { max-width:1440px !important; padding-top:1.6rem !important; padding-bottom:2.5rem !important; }
+    main > div:not(.hidden) { animation:avFadeIn .22s ease both; }
+    @keyframes avFadeIn { from {opacity:.55;transform:translateY(4px)} to {opacity:1;transform:translateY(0)} }
+    main .bg-white.rounded-2xl { border:1px solid #e4eaf2 !important; border-radius:20px !important; box-shadow:0 7px 24px rgba(25,48,79,.055) !important; }
+    main .bg-white.rounded-2xl.p-6, main .bg-white.rounded-2xl .p-6 { padding:1.35rem !important; }
+    main h2 { color:#172d4a !important; letter-spacing:-.015em; }
+    main h3 { letter-spacing:-.01em; }
+    main label { color:#52647b !important; font-weight:500 !important; }
+    main input:not([type=checkbox]):not([type=radio]), main select, main textarea { border-color:#d8e1ec !important; border-radius:11px !important; background-color:#fbfdff !important; min-height:42px; transition:border-color .15s ease,box-shadow .15s ease,background .15s ease; }
+    main input:not([type=checkbox]):not([type=radio]):focus, main select:focus, main textarea:focus { border-color:#4c8bd8 !important; background:#fff !important; box-shadow:0 0 0 3px rgba(59,130,246,.13) !important; outline:none !important; }
+    main button { border-radius:11px; transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease; }
+    main button:hover { box-shadow:0 4px 12px rgba(25,48,79,.09); }
+    main button:active { transform:translateY(1px); }
+    main .bg-blue-600, main .bg-indigo-600 { background:linear-gradient(135deg,#2457a7,#286fc0) !important; }
+    main .bg-blue-600:hover, main .bg-indigo-600:hover { filter:brightness(.96); }
+    main .bg-emerald-500 { background:#0f9f8f !important; }
+    main .bg-emerald-50 { background:#eafaf5 !important; }
+    main .bg-amber-50 { background:#fff7e8 !important; }
+    main .bg-indigo-50 { background:#eef3ff !important; }
+    main .bg-violet-50 { background:#f5f1ff !important; }
+    main .border-slate-100, main .border-slate-200, main .border-slate-300 { border-color:#e2e8f0 !important; }
+    main .bg-slate-50 { background:#f7f9fc !important; }
+    main table { border-collapse:separate !important; border-spacing:0; }
+    main thead th { background:#f4f7fb !important; color:#53647a !important; font-weight:600; }
+    main tbody tr:hover { background:#f8fbff; }
+    #calendarGrid { gap:.45rem !important; }
+    #calendarGrid > * { border-radius:12px !important; transition:transform .15s ease,box-shadow .15s ease; }
+    #calendarGrid > *:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(25,48,79,.08); }
+    #attendanceModal > div { border-radius:22px !important; box-shadow:0 25px 70px rgba(7,20,42,.3) !important; }
+    #syncStatus { font-weight:500; }
+    :focus-visible { outline:3px solid rgba(20,145,170,.45); outline-offset:2px; }
+    @media (min-width:1024px) { main { padding-left:2rem !important; padding-right:2rem !important; } }
+    @media (max-width:640px) {
+      body > header > div { align-items:stretch !important; }
+      body > header > div > div:first-child { align-items:center; }
+      body > header h1 { font-size:1.2rem !important; }
+      body > header p { line-height:1.5; }
+      body > header > div > div:last-child { display:grid !important; grid-template-columns:1fr 1fr; width:100%; }
+      body > header > div > div:last-child #syncStatus { grid-column:1 / -1; text-align:center; }
+      body > nav { top:0; }
+      body > nav > div { gap:.2rem !important; padding-left:.75rem !important; padding-right:.75rem !important; }
+      body > nav button { flex:0 0 auto; padding:.7rem .75rem !important; font-size:.78rem !important; }
+      main { padding:.9rem .7rem 1.5rem !important; }
+      main .bg-white.rounded-2xl.p-6, main .bg-white.rounded-2xl .p-6 { padding:1rem !important; }
+      #calendarGrid { gap:.2rem !important; }
+      #calendarGrid > * { border-radius:8px !important; min-width:0; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+    @media print { body { background:#fff !important; } }
+
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-full flex flex-col">
@@ -35,8 +101,8 @@
                     <i class="fa-solid fa-calculator text-2xl text-white"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Salary & Attendance Pro</h1>
-                    <p class="text-xs sm:text-sm text-blue-100">ระบบคำนวณเงินเดือน ลงเวลาทำงาน ค่าเข้ากะ และออกสลิปเงินเดือน · v3.0</p>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">AOTAVSEC Salary & Attendance</h1>
+                    <p class="text-xs sm:text-sm text-blue-100">ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล · UI/UX v3.2 · Check In / Check Out</p>
                 </div>
             </div>
             <div class="flex items-center flex-wrap gap-2">
@@ -167,7 +233,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">จำนวนชั่วโมง OT ที่ทำได้ (ชม.)</label>
-                            <input type="number" id="otHours" value="10" min="0" step="0.5" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <input type="number" id="otHours" value="0" min="0" step="0.5" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">ตัวคูณ OT</label>
@@ -181,24 +247,24 @@
                         </div>
                         <div class="sm:col-span-2 rounded-xl border border-blue-200 bg-blue-50 p-4">
                             <label class="flex items-center gap-2 text-sm font-semibold text-blue-900 cursor-pointer">
-                                <input type="checkbox" id="separateOtToggle" class="rounded text-blue-600 focus:ring-blue-500" /> แยก OT ตามประเภทวัน (ตัวเลือกใหม่)
+                                <input type="checkbox" id="separateOtToggle" class="rounded text-blue-600 focus:ring-blue-500" /> แยก OT ตามตัวคูณ
                             </label>
-                            <p class="text-xs text-blue-800 mt-1">เมื่อเปิดใช้ ระบบจะใช้ชั่วโมงที่กรอกแยกแต่ละประเภทแทนช่องชั่วโมง OT และตัวคูณแบบเดิม โดยยังใช้ฐานอัตรา OT ที่เลือกด้านบน</p>
+                            <p class="text-xs text-blue-800 mt-1">เมื่อเปิดใช้ ระบบจะคำนวณแต่ละกลุ่มชั่วโมงด้วยตัวคูณของกลุ่มนั้น โดยใช้ฐานอัตรา OT เดิมด้านบน</p>
                             <div id="separateOtFields" class="hidden mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div class="rounded-lg bg-white border border-blue-100 p-3">
-                                    <label for="otWeekdayHours" class="block text-xs font-medium text-slate-600 mb-1">OT วันทำงาน (ชม.)</label>
+                                    <label for="otWeekdayHours" class="block text-xs font-medium text-slate-600 mb-1">OT ×1.5 (ชม.)</label>
                                     <input type="number" id="otWeekdayHours" value="0" min="0" step="0.25" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm" />
                                     <label for="otWeekdayMultiplier" class="block text-xs font-medium text-slate-600 mt-2 mb-1">ตัวคูณ</label>
                                     <select id="otWeekdayMultiplier" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm"><option value="1">1 เท่า</option><option value="1.5" selected>1.5 เท่า</option><option value="2">2 เท่า</option><option value="3">3 เท่า</option></select>
                                 </div>
                                 <div class="rounded-lg bg-white border border-blue-100 p-3">
-                                    <label for="otHolidayHours" class="block text-xs font-medium text-slate-600 mb-1">ทำงานวันหยุด (ชม.)</label>
+                                    <label for="otHolidayHours" class="block text-xs font-medium text-slate-600 mb-1">OT ×2 (ชม.)</label>
                                     <input type="number" id="otHolidayHours" value="0" min="0" step="0.25" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm" />
                                     <label for="otHolidayMultiplier" class="block text-xs font-medium text-slate-600 mt-2 mb-1">ตัวคูณ</label>
                                     <select id="otHolidayMultiplier" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm"><option value="1">1 เท่า</option><option value="1.5">1.5 เท่า</option><option value="2" selected>2 เท่า</option><option value="3">3 เท่า</option></select>
                                 </div>
                                 <div class="rounded-lg bg-white border border-blue-100 p-3">
-                                    <label for="otHolidayOvertimeHours" class="block text-xs font-medium text-slate-600 mb-1">OT เกินเวลาวันหยุด (ชม.)</label>
+                                    <label for="otHolidayOvertimeHours" class="block text-xs font-medium text-slate-600 mb-1">OT ×3 (ชม.)</label>
                                     <input type="number" id="otHolidayOvertimeHours" value="0" min="0" step="0.25" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm" />
                                     <label for="otHolidayOvertimeMultiplier" class="block text-xs font-medium text-slate-600 mt-2 mb-1">ตัวคูณ</label>
                                     <select id="otHolidayOvertimeMultiplier" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm"><option value="1">1 เท่า</option><option value="1.5">1.5 เท่า</option><option value="2">2 เท่า</option><option value="3" selected>3 เท่า</option></select>
@@ -306,9 +372,9 @@
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-check text-blue-600"></i> ปฏิทินลงเวลาทำงาน ค่ากะ & OT
+                            <i class="fa-solid fa-calendar-check text-blue-600"></i> ปฏิทินลงเวลาทำงาน & OT
                         </h2>
-                        <p class="text-xs text-slate-500 mt-1">บันทึกวันเข้าทำงาน เลือกประเภทกะ (กะเช้า 32฿ / กะบ่าย 48฿) และชั่วโมง OT</p>
+                        <p class="text-xs text-slate-500 mt-1">บันทึกวันที่ เวลาเริ่มงาน เวลาเลิกงาน และ OT ได้เอง โดยไม่ต้องเลือกกะสำเร็จรูป</p>
                     </div>
                     
                     <div class="flex items-center gap-3">
@@ -332,7 +398,7 @@
                     <div class="bg-orange-50 border border-orange-100 rounded-2xl p-4">
                         <div class="text-xs text-orange-600 font-medium">ค่ากะรวม</div>
                         <div class="text-xl font-bold text-orange-700 mt-1" id="calStatShiftAllowance">0 ฿</div>
-                        <div class="text-[10px] text-orange-500 mt-0.5" id="calStatShiftBreakdown">เช้า 0 / บ่าย 0</div>
+                        <div class="text-[10px] text-orange-500 mt-0.5" id="calStatShiftBreakdown">ข้อมูลกะเดิมเท่านั้น</div>
                     </div>
                     <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4">
                         <div class="text-xs text-blue-600 font-medium">ชั่วโมง OT รวม</div>
@@ -514,6 +580,7 @@
         </div>
     </div>
 
+
     <!-- Modal 1: Check In/Out & OT Detail Modal -->
     <div id="attendanceModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col">
@@ -527,9 +594,10 @@
             </div>
 
             <div class="p-6 space-y-4">
-                <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-200">
-                    <div class="text-xs text-slate-500">วันที่เลือก</div>
-                    <div id="modalSelectedDateText" class="text-base font-bold text-slate-800">14 ตุลาคม 2026</div>
+                <div class="rounded-xl border border-blue-100 bg-blue-50/70 p-3">
+                    <label for="attDate" class="block text-xs font-semibold text-blue-900 mb-1">วันที่ทำงาน</label>
+                    <input type="date" id="attDate" onchange="app.changeAttendanceDate(this.value)" class="w-full bg-white border border-blue-200 rounded-xl px-3 py-2.5 text-sm text-slate-800">
+                    <div id="modalSelectedDateText" class="text-xs text-slate-500 mt-2">เลือกวันที่บันทึก</div>
                 </div>
 
                 <div>
@@ -542,31 +610,31 @@
                     </select>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">ประเภทกะทำงาน (Shift)</label>
-                    <select id="attShift" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        <option value="NONE">ไม่เข้ากะ / ปกติ (0 บาท)</option>
-                        <option value="MORNING">☀️ กะเช้า (+32 บาท)</option>
-                        <option value="AFTERNOON">🌙 กะบ่าย (+48 บาท)</option>
-                    </select>
-                </div>
+                <p class="text-xs text-slate-500 -mt-2">ไม่ต้องเลือกกะสำเร็จรูป สามารถกรอกเวลาเริ่มงานและเลิกงานให้ตรงกับวันที่ทำงานจริงได้</p>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">เวลา Check In</label>
-                        <input type="time" id="attCheckIn" value="08:30" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-medium text-slate-600 mb-1">เวลาเริ่มงาน (Check In)</label>
+                        <input type="time" id="attCheckIn" value="" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">เวลา Check Out</label>
-                        <input type="time" id="attCheckOut" value="17:30" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-medium text-slate-600 mb-1">เวลาเลิกงาน (Check Out)</label>
+                        <input type="time" id="attCheckOut" value="" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
                 </div>
 
                 <div id="attDurationHint" class="rounded-xl border border-cyan-100 bg-cyan-50 px-3 py-2 text-xs text-cyan-800" aria-live="polite">เวลาทำงานโดยประมาณ: 9 ชม. (ไม่หักเวลาพัก)</div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-600 mb-1">จำนวนชั่วโมง OT (ชั่วโมง)</label>
-                    <input type="number" id="attOtHours" value="0" min="0" step="0.5" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label class="block text-xs font-medium text-slate-600 mb-1">จำนวนชั่วโมง OT</label>
+                    <input type="number" id="attOtHours" value="0" min="0" step="0.25" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    <label for="attOtMultiplier" class="block text-xs font-medium text-slate-600 mt-3 mb-1">ประเภท / ตัวคูณ OT</label>
+                    <select id="attOtMultiplier" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="1.5">OT ×1.5</option>
+                        <option value="2">OT ×2</option>
+                        <option value="3">OT ×3</option>
+                    </select>
+                    <p class="text-[11px] text-slate-500 mt-1">ระบบจะนำชั่วโมงและตัวคูณที่บันทึกจากปฏิทินไปคำนวณเมื่อกด “ดึงข้อมูลจากปฏิทิน”</p>
                 </div>
 
                 <div>
@@ -695,13 +763,13 @@
                     components: [{ key: 'legacy', label: 'OT แบบเดิม', hours, multiplier, pay: baseRate * multiplier * hours }] };
             }
             const categories = [
-                { key: 'weekday', label: 'OT วันทำงาน', hours: input.otWeekdayHours, multiplier: input.otWeekdayMultiplier },
-                { key: 'holiday', label: 'ทำงานวันหยุด', hours: input.otHolidayHours, multiplier: input.otHolidayMultiplier },
-                { key: 'holidayOvertime', label: 'OT เกินเวลาวันหยุด', hours: input.otHolidayOvertimeHours, multiplier: input.otHolidayOvertimeMultiplier }
+                { key: 'weekday', label: 'OT', hours: input.otWeekdayHours, multiplier: input.otWeekdayMultiplier },
+                { key: 'holiday', label: 'OT', hours: input.otHolidayHours, multiplier: input.otHolidayMultiplier },
+                { key: 'holidayOvertime', label: 'OT', hours: input.otHolidayOvertimeHours, multiplier: input.otHolidayOvertimeMultiplier }
             ].map(item => {
                 const hours = Math.max(0, Number(item.hours) || 0);
                 const multiplier = Math.max(0, Number(item.multiplier) || 1);
-                return { ...item, hours, multiplier, pay: baseRate * multiplier * hours };
+                return { ...item, label: `OT ×${multiplier}`, hours, multiplier, pay: baseRate * multiplier * hours };
             });
             return { baseRate, totalHours: categories.reduce((sum, item) => sum + item.hours, 0),
                 totalPay: categories.reduce((sum, item) => sum + item.pay, 0), components: categories };
@@ -733,11 +801,12 @@
             }
             if (Number(record.otHours) < 0) warnings.push('ชั่วโมง OT ติดลบ');
             if (Number(record.otHours) > 16) warnings.push('ชั่วโมง OT เกิน 16 ชั่วโมงในวันเดียว');
+            if (Number(record.otHours) > 0 && ![1.5, 2, 3].includes(Number(record.otMultiplier || 1.5))) warnings.push('ตัวคูณ OT ไม่อยู่ในรายการ ×1.5, ×2 หรือ ×3');
             return warnings;
         }
 
         function buildAttendanceAuditEntry(previous, next, timestamp) {
-            const labels = { status: 'สถานะ', shift: 'กะ', checkIn: 'เวลาเข้า', checkOut: 'เวลาออก', otHours: 'ชั่วโมง OT', note: 'หมายเหตุ' };
+            const labels = { status: 'สถานะ', shift: 'กะเดิม (ข้อมูลเก่า)', checkIn: 'เวลาเริ่มงาน', checkOut: 'เวลาเลิกงาน', otHours: 'ชั่วโมง OT', otMultiplier: 'ตัวคูณ OT', note: 'หมายเหตุ' };
             if (!previous) return { action: 'create', at: timestamp, changes: [{ field: 'record', label: 'รายการ', from: '—', to: 'สร้างรายการ' }] };
             const changes = Object.keys(labels).filter(key => String(previous[key] ?? '') !== String(next[key] ?? '')).map(key => ({
                 field: key, label: labels[key], from: String(previous[key] ?? '—'), to: String(next[key] ?? '—')
@@ -1414,25 +1483,54 @@
                 const thaiMonths = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
                 document.getElementById('modalSelectedDateText').innerText = `${day} ${thaiMonths[month]} ${year + 543}`;
 
+                const lastTimes = this.readLocalJson('salary_last_attendance_times', {});
                 const record = this.attendanceData[dateKey] || {
                     status: 'PRESENT',
                     shift: 'NONE',
-                    checkIn: '',
-                    checkOut: '',
+                    checkIn: lastTimes.checkIn || '',
+                    checkOut: lastTimes.checkOut || '',
                     otHours: 0,
+                    otMultiplier: lastTimes.otMultiplier || '1.5',
                     note: ''
                 };
 
+                document.getElementById('attDate').value = dateKey;
+                this.updateAttendanceDateLabel(dateKey);
                 document.getElementById('attStatus').value = record.status || 'PRESENT';
-                document.getElementById('attShift').value = record.shift || 'NONE';
-                document.getElementById('attCheckIn').value = record.checkIn || '';
-                document.getElementById('attCheckOut').value = record.checkOut || '';
-                document.getElementById('attOtHours').value = record.otHours || 0;
+                document.getElementById('attCheckIn').value = record.checkIn || lastTimes.checkIn || '';
+                document.getElementById('attCheckOut').value = record.checkOut || lastTimes.checkOut || '';
+                document.getElementById('attOtHours').value = record.otHours ?? 0;
+                document.getElementById('attOtMultiplier').value = String(record.otMultiplier || lastTimes.otMultiplier || '1.5');
                 document.getElementById('attNote').value = record.note || '';
                 this.renderAttendanceAudit(record);
                 this.updateAttendanceDurationHint();
 
                 document.getElementById('attendanceModal').classList.remove('hidden');
+            }
+
+            updateAttendanceDateLabel(dateKey) {
+                const label = document.getElementById('modalSelectedDateText');
+                if (!label || !dateKey) return;
+                const d = new Date(`${dateKey}T12:00:00`);
+                label.textContent = Number.isNaN(d.getTime()) ? dateKey : d.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            }
+
+            changeAttendanceDate(dateKey) {
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dateKey || ''))) return;
+                this.selectedDateKey = dateKey;
+                const dateParts = dateKey.split('-').map(Number);
+                this.currentDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], 12, 0, 0);
+                const record = this.attendanceData[dateKey];
+                const lastTimes = this.readLocalJson('salary_last_attendance_times', {});
+                document.getElementById('attStatus').value = record?.status || 'PRESENT';
+                document.getElementById('attCheckIn').value = record?.checkIn || lastTimes.checkIn || '';
+                document.getElementById('attCheckOut').value = record?.checkOut || lastTimes.checkOut || '';
+                document.getElementById('attOtHours').value = record?.otHours ?? 0;
+                document.getElementById('attOtMultiplier').value = String(record?.otMultiplier || lastTimes.otMultiplier || '1.5');
+                document.getElementById('attNote').value = record?.note || '';
+                this.updateAttendanceDateLabel(dateKey);
+                this.renderAttendanceAudit(record || null);
+                this.updateAttendanceDurationHint();
             }
 
             closeAttendanceModal() {
@@ -1445,13 +1543,11 @@
                 const previous = this.attendanceData[dateKey] ? JSON.parse(JSON.stringify(this.attendanceData[dateKey])) : null;
                 const record = {
                     status: document.getElementById('attStatus').value,
-                    shift: document.getElementById('attShift').value,
+                    shift: previous?.shift || 'NONE',
                     checkIn: document.getElementById('attCheckIn').value,
                     checkOut: document.getElementById('attCheckOut').value,
                     otHours: parseFloat(document.getElementById('attOtHours').value) || 0,
-                    otMultiplier: Number(previous?.otMultiplier ?? 1),
-                    scheduledStart: previous?.scheduledStart || '',
-                    scheduledEnd: previous?.scheduledEnd || '',
+                    otMultiplier: parseFloat(document.getElementById('attOtMultiplier').value) || 1.5,
                     note: document.getElementById('attNote').value,
                     updatedAt: new Date().toISOString(),
                     editHistory: Array.isArray(previous?.editHistory) ? previous.editHistory.slice() : []
@@ -1464,6 +1560,7 @@
                 this.attendanceData[dateKey] = record;
                 localStorage.setItem('salary_attendance_audit', JSON.stringify([auditEntry, ...this.readLocalJson('salary_attendance_audit', [])].filter(Boolean).slice(0, 500)));
                 localStorage.setItem('salary_attendance', JSON.stringify(this.attendanceData));
+                localStorage.setItem('salary_last_attendance_times', JSON.stringify({ checkIn: record.checkIn || '', checkOut: record.checkOut || '', otMultiplier: String(record.otMultiplier || 1.5) }));
                 this.closeAttendanceModal(); this.renderCalendar();
                 if (!this.remoteEnabled) { alert('บันทึกไว้ในเบราว์เซอร์นี้เท่านั้น กรุณาเปิดเว็บผ่าน Apps Script เพื่อซิงค์ Google Sheets'); return; }
                 this.setSyncStatus('กำลังบันทึก…', 'info');
@@ -1496,6 +1593,7 @@
                 const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                 const record = this.attendanceData[todayKey] || {};
                 const savedSchedule = this.readLocalJson('salary_last_schedule', {});
+                const lastTimes = this.readLocalJson('salary_last_attendance_times', {});
                 document.getElementById('quickAttendanceTitle').textContent = 'Check In วันนี้';
                 document.getElementById('quickAttendanceSubtitle').textContent = 'กำหนดเวลาตามตารางและบันทึกเวลาเข้างานจริง';
                 document.getElementById('quickAttendanceDate').textContent = todayKey;
@@ -1503,11 +1601,13 @@
                 document.getElementById('quickCheckOutFields').classList.add('hidden');
                 document.getElementById('quickScheduleStart').value = record.scheduledStart || savedSchedule.start || '';
                 document.getElementById('quickScheduleEnd').value = record.scheduledEnd || savedSchedule.end || '';
-                document.getElementById('quickActualCheckIn').value = timeStr;
+                document.getElementById('quickActualCheckIn').value = record.checkIn || timeStr;
                 document.getElementById('quickAttendanceNote').value = record.note || '';
                 this.quickAttendanceMode = 'checkin';
                 this.selectedDateKey = todayKey;
-                const modal = document.getElementById('quickAttendanceModal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+                const modal = document.getElementById('quickAttendanceModal');
+                modal.classList.remove('hidden'); modal.classList.add('flex');
+                setTimeout(() => document.getElementById('quickScheduleStart')?.focus(), 50);
             }
 
             quickTodayCheckOut() {
@@ -1520,54 +1620,90 @@
                 document.getElementById('quickAttendanceDate').textContent = todayKey;
                 document.getElementById('quickCheckInFields').classList.add('hidden');
                 document.getElementById('quickCheckOutFields').classList.remove('hidden');
-                document.getElementById('quickActualCheckOut').value = timeStr;
+                document.getElementById('quickActualCheckOut').value = record.checkOut || timeStr;
                 document.getElementById('quickOtHours').value = record.otHours != null ? record.otHours : 2;
                 document.getElementById('quickOtMultiplier').value = String(record.otMultiplier != null ? record.otMultiplier : 1.5);
                 document.getElementById('quickAttendanceNote').value = record.note || '';
                 this.quickAttendanceMode = 'checkout';
                 this.selectedDateKey = todayKey;
-                const modal = document.getElementById('quickAttendanceModal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+                const modal = document.getElementById('quickAttendanceModal');
+                modal.classList.remove('hidden'); modal.classList.add('flex');
+                setTimeout(() => document.getElementById('quickOtHours')?.focus(), 50);
             }
 
             closeQuickAttendanceModal() {
-                const modal = document.getElementById('quickAttendanceModal'); modal.classList.add('hidden'); modal.classList.remove('flex');
+                const modal = document.getElementById('quickAttendanceModal');
+                if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
             }
 
             async saveQuickAttendance() {
                 const dateKey = this.selectedDateKey;
-                if (!dateKey || !this.quickAttendanceMode) return;
+                const mode = this.quickAttendanceMode;
+                if (!dateKey || !mode) return;
                 const previous = this.attendanceData[dateKey] ? JSON.parse(JSON.stringify(this.attendanceData[dateKey])) : {};
-                const record = { status: previous.status || 'PRESENT', shift: previous.shift || 'NONE', checkIn: previous.checkIn || '', checkOut: previous.checkOut || '', otHours: Number(previous.otHours) || 0, otMultiplier: Number(previous.otMultiplier ?? 1), scheduledStart: previous.scheduledStart || '', scheduledEnd: previous.scheduledEnd || '', note: document.getElementById('quickAttendanceNote').value.trim(), updatedAt: new Date().toISOString(), editHistory: Array.isArray(previous.editHistory) ? previous.editHistory.slice() : [] };
-                if (this.quickAttendanceMode === 'checkin') {
+                const record = {
+                    status: previous.status || 'PRESENT', shift: previous.shift || 'NONE',
+                    checkIn: previous.checkIn || '', checkOut: previous.checkOut || '',
+                    otHours: Number(previous.otHours) || 0, otMultiplier: Number(previous.otMultiplier ?? 1.5),
+                    scheduledStart: previous.scheduledStart || '', scheduledEnd: previous.scheduledEnd || '',
+                    note: document.getElementById('quickAttendanceNote').value.trim(),
+                    updatedAt: new Date().toISOString(),
+                    editHistory: Array.isArray(previous.editHistory) ? previous.editHistory.slice() : []
+                };
+                if (mode === 'checkin') {
                     record.checkIn = document.getElementById('quickActualCheckIn').value;
                     record.scheduledStart = document.getElementById('quickScheduleStart').value;
                     record.scheduledEnd = document.getElementById('quickScheduleEnd').value;
-                    if (!record.scheduledStart || !record.scheduledEnd) { alert('กรุณากรอกเวลาเริ่มกะและเวลาเลิกกะตามตารางให้ครบ'); return; }
+                    if (!record.scheduledStart || !record.scheduledEnd || !record.checkIn) {
+                        alert('กรุณากรอกเวลาเริ่มกะ เวลาเลิกกะ และเวลา Check In จริงให้ครบ'); return;
+                    }
                     localStorage.setItem('salary_last_schedule', JSON.stringify({ start: record.scheduledStart, end: record.scheduledEnd }));
+                    // Keep the last-used schedule separately from actual punch times, with no hardcoded shift preset.
+                    localStorage.setItem('salary_last_attendance_times', JSON.stringify({
+                        checkIn: record.scheduledStart, checkOut: record.scheduledEnd,
+                        otMultiplier: String(record.otMultiplier || 1.5)
+                    }));
                 } else {
                     record.checkOut = document.getElementById('quickActualCheckOut').value;
                     record.otHours = Math.max(0, Number(document.getElementById('quickOtHours').value) || 0);
                     record.otMultiplier = Math.max(0, Number(document.getElementById('quickOtMultiplier').value) || 1);
+                    if (!record.checkOut) { alert('กรุณากรอกเวลา Check Out จริง'); return; }
+                    if (!record.checkIn) {
+                        const proceed = confirm('ยังไม่มีเวลา Check In ของวันนี้ ต้องการบันทึก Check Out ต่อหรือไม่?');
+                        if (!proceed) return;
+                    }
+                    localStorage.setItem('salary_last_attendance_times', JSON.stringify({
+                        checkIn: record.scheduledStart || this.readLocalJson('salary_last_schedule', {}).start || '',
+                        checkOut: record.scheduledEnd || this.readLocalJson('salary_last_schedule', {}).end || '',
+                        otMultiplier: String(record.otMultiplier || 1.5)
+                    }));
                 }
                 const auditEntry = buildAttendanceAuditEntry(previous, record, record.updatedAt);
                 if (auditEntry) record.editHistory.push(auditEntry);
                 record.editHistory = record.editHistory.slice(-50);
+                const warnings = getAttendanceRecordWarnings(record);
+                if (warnings.length && !confirm(`พบข้อมูลที่ควรตรวจสอบ:\n- ${warnings.join('\n- ')}\n\nต้องการบันทึกต่อหรือไม่?`)) return;
                 this.attendanceData[dateKey] = record;
+                localStorage.setItem('salary_attendance_audit', JSON.stringify([auditEntry, ...this.readLocalJson('salary_attendance_audit', [])].filter(Boolean).slice(0, 500)));
                 localStorage.setItem('salary_attendance', JSON.stringify(this.attendanceData));
                 this.closeQuickAttendanceModal(); this.renderCalendar();
-                if (this.quickAttendanceMode === 'checkout') {
+                if (mode === 'checkout') {
                     const hours = document.getElementById('otHours');
                     const multiplier = document.getElementById('otMultiplier');
                     if (hours) { hours.value = String(record.otHours); hours.dispatchEvent(new Event('input', { bubbles: true })); }
                     if (multiplier) { multiplier.value = String(record.otMultiplier); multiplier.dispatchEvent(new Event('change', { bubbles: true })); }
                     this.scheduleCalculatorStateSave(); this.calculate();
                 }
-                if (!this.remoteEnabled) { this.setSyncStatus('บันทึกเฉพาะเครื่องนี้', 'error'); alert('บันทึกลงเบราว์เซอร์นี้แล้ว หากต้องการซิงก์ Google Sheets ให้เปิดผ่าน Apps Script Web App'); return; }
+                if (!this.remoteEnabled) {
+                    this.setSyncStatus('บันทึกเฉพาะเครื่องนี้', 'error');
+                    alert('บันทึกลงเบราว์เซอร์นี้แล้ว หากต้องการซิงก์ Google Sheets ให้เปิดผ่าน Apps Script Web App');
+                    return;
+                }
                 this.setSyncStatus('กำลังบันทึก…', 'info');
                 try {
                     const result = await this.runMutation('saveAttendanceRecord', dateKey, record);
                     this.setSyncStatus(result.queued ? `บันทึกในเครื่องแล้ว รอซิงก์ ${this.pendingSync.length} รายการ` : 'บันทึกลง Google Sheets แล้ว', result.queued ? 'info' : 'ok');
-                    alert(`บันทึก${this.quickAttendanceMode === 'checkin' ? ' Check In' : ' Check Out'} เรียบร้อยแล้ว${result.queued ? ' (รอซิงก์)' : ''}`);
+                    alert(`บันทึก ${mode === 'checkin' ? 'Check In' : 'Check Out'} เรียบร้อยแล้ว${result.queued ? ' (รอซิงก์)' : ''}`);
                 } catch (err) { this.setSyncStatus('บันทึกไม่สำเร็จ', 'error'); alert('บันทึกข้อมูลไม่สำเร็จ: ' + err.message); }
             }
 
@@ -1575,41 +1711,51 @@
                 const year = this.currentDate.getFullYear();
                 const month = this.currentDate.getMonth();
                 const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
-
-                let workDaysCount = 0;
-                let totalOtHours = 0;
-                let morningShiftCount = 0;
-                let afternoonShiftCount = 0;
-                let totalWorkHours = 0;
-                let warningCount = 0;
+                let workDaysCount = 0, totalOtHours = 0, totalWorkHours = 0, warningCount = 0;
+                const otByMultiplier = { '1.5': 0, '2': 0, '3': 0 };
+                let legacyMorning = 0, legacyAfternoon = 0;
 
                 Object.keys(this.attendanceData).forEach(key => {
-                    if (key.startsWith(prefix)) {
-                        const rec = this.attendanceData[key];
-                        if (rec.status === 'PRESENT') {
-                            workDaysCount++;
-                            const duration = calculateShiftDuration(rec.checkIn, rec.checkOut);
-                            if (duration.valid) totalWorkHours += duration.hours;
-                            warningCount += getAttendanceRecordWarnings(rec).length;
-                        }
-                        if (rec.otHours) totalOtHours += parseFloat(rec.otHours);
-
-                        if (rec.shift === 'MORNING') morningShiftCount++;
-                        if (rec.shift === 'AFTERNOON') afternoonShiftCount++;
+                    if (!key.startsWith(prefix)) return;
+                    const rec = this.attendanceData[key];
+                    if (rec.status === 'PRESENT') {
+                        workDaysCount++;
+                        const duration = calculateShiftDuration(rec.checkIn, rec.checkOut);
+                        if (duration.valid) totalWorkHours += duration.hours;
+                        warningCount += getAttendanceRecordWarnings(rec).length;
                     }
+                    const hours = Math.max(0, Number(rec.otHours) || 0);
+                    if (hours > 0) {
+                        const multiplier = String(Number(rec.otMultiplier) || 1.5);
+                        const bucket = ['1.5', '2', '3'].includes(multiplier) ? multiplier : '1.5';
+                        otByMultiplier[bucket] += hours;
+                        totalOtHours += hours;
+                    }
+                    // Keep historical shift allowances from legacy records only; new records have no preset shift selector.
+                    if (rec.shift === 'MORNING') legacyMorning++;
+                    if (rec.shift === 'AFTERNOON') legacyAfternoon++;
                 });
 
-                const totalShiftAllowance = (morningShiftCount * 32) + (afternoonShiftCount * 48);
-
+                const totalShiftAllowance = (legacyMorning * 32) + (legacyAfternoon * 48);
                 const thaiMonths = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
                 document.getElementById('payPeriod').value = `${thaiMonths[month]} ${year + 543}`;
                 document.getElementById('workDays').value = workDaysCount;
-                document.getElementById('otHours').value = totalOtHours;
                 document.getElementById('shiftAllowance').value = totalShiftAllowance;
 
+                // Preserve the same base-rate formula while grouping attendance OT by its selected multiplier.
+                document.getElementById('separateOtToggle').checked = true;
+                document.getElementById('otHours').value = 0;
+                document.getElementById('otMultiplier').value = '1';
+                document.getElementById('otWeekdayHours').value = otByMultiplier['1.5'];
+                document.getElementById('otWeekdayMultiplier').value = '1.5';
+                document.getElementById('otHolidayHours').value = otByMultiplier['2'];
+                document.getElementById('otHolidayMultiplier').value = '2';
+                document.getElementById('otHolidayOvertimeHours').value = otByMultiplier['3'];
+                document.getElementById('otHolidayOvertimeMultiplier').value = '3';
                 this.calculate();
+                this.scheduleCalculatorStateSave();
                 this.switchTab('calculator');
-                alert(`ดึงข้อมูลประจำเดือน ${thaiMonths[month]} ${year + 543} เรียบร้อยแล้ว:\n- วันทำงาน: ${workDaysCount} วัน\n- ชั่วโมงทำงานจากเวลาเข้า-ออก: ${Math.round(totalWorkHours * 100) / 100} ชม. (ไม่หักพัก)\n- ค่าเข้ากะ: ${totalShiftAllowance} ฿ (กะเช้า ${morningShiftCount} วัน, กะบ่าย ${afternoonShiftCount} วัน)\n- ชั่วโมง OT: ${totalOtHours} ชม.\n- รายการที่ควรตรวจสอบ: ${warningCount} รายการ`);
+                alert(`ดึงข้อมูลประจำเดือน ${thaiMonths[month]} ${year + 543} เรียบร้อยแล้ว:\n- วันทำงาน: ${workDaysCount} วัน\n- ชั่วโมงทำงานจากเวลาเข้า-ออก: ${Math.round(totalWorkHours * 100) / 100} ชม. (ไม่หักพัก)\n- ค่าเข้ากะจากข้อมูลเก่า: ${totalShiftAllowance} บาท\n- OT ×1.5: ${otByMultiplier['1.5']} ชม.\n- OT ×2: ${otByMultiplier['2']} ชม.\n- OT ×3: ${otByMultiplier['3']} ชม.\n- ชั่วโมง OT รวม: ${totalOtHours} ชม.\n- รายการที่ควรตรวจสอบ: ${warningCount} รายการ\n\nระบบนำ OT แต่ละตัวคูณไปคำนวณด้วยสูตรฐาน OT เดิมแล้ว`);
             }
 
             /* --- Payslip & History --- */
