@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1d4ed8">
+    <meta name="theme-color" content="#10233f">
     <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v3.0 Phase 5">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
-    <title>AOTAVSEC Salary Calculator v3.2 Check In/Out Workflow</title>
+    <title>AOTAVSEC Salary Calculator v3.3 Premium Corporate</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font -->
@@ -89,6 +89,61 @@
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
     @media print { body { background:#fff !important; } }
 
+
+    /* AOTAVSEC Premium Corporate UI v3.3 — visual layer only; calculation and data handlers remain unchanged */
+    :root { --av-navy:#10233f; --av-blue:#2457a7; --av-teal:#0f9f9a; --av-ink:#17263c; --av-muted:#64748b; --av-line:#e2e8f0; --av-surface:#fff; --av-canvas:#f4f7fb; }
+    html { background:var(--av-canvas); }
+    body { min-height:100%; }
+    body > header { background:linear-gradient(118deg,#0d1b31 0%,#173d69 58%,#0d6872 100%) !important; }
+    body > header button { min-height:40px; }
+    body > nav { z-index:40; }
+    main .bg-white.rounded-2xl { overflow-wrap:anywhere; }
+    main input, main select, main textarea { color:var(--av-ink); }
+    main button:focus-visible, body > header button:focus-visible, body > nav button:focus-visible { outline:3px solid rgba(20,145,170,.55); outline-offset:2px; }
+    #attendanceModal, #quickAttendanceModal, #payslipModal { backdrop-filter:blur(5px); }
+    #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { max-height:calc(100dvh - 2rem); overflow-y:auto; }
+    body[data-theme="dark"] { color-scheme:dark; color:#e6edf7 !important; background:#0a1220 !important; }
+    body[data-theme="dark"] > header { background:linear-gradient(118deg,#070d18 0%,#102746 58%,#0c3e48 100%) !important; }
+    body[data-theme="dark"] > nav { background:rgba(15,25,42,.96) !important; border-color:#26364d !important; box-shadow:0 5px 18px rgba(0,0,0,.22) !important; }
+    body[data-theme="dark"] > nav button { color:#a9b9ce !important; }
+    body[data-theme="dark"] > nav button:hover { background:#1b2b42 !important; color:#f3f7ff !important; }
+    body[data-theme="dark"] > nav button.border-blue-600 { background:#1b3658 !important; color:#a9d0ff !important; box-shadow:inset 0 0 0 1px #31577f; }
+    body[data-theme="dark"] main .bg-white, body[data-theme="dark"] main .bg-white.rounded-2xl, body[data-theme="dark"] main .bg-white.rounded-xl { background:#111e30 !important; border-color:#283950 !important; color:#e6edf7 !important; box-shadow:0 8px 24px rgba(0,0,0,.18) !important; }
+    body[data-theme="dark"] main .bg-slate-50, body[data-theme="dark"] main .bg-gray-50, body[data-theme="dark"] main .bg-blue-50, body[data-theme="dark"] main .bg-indigo-50, body[data-theme="dark"] main .bg-violet-50, body[data-theme="dark"] main .bg-emerald-50, body[data-theme="dark"] main .bg-amber-50, body[data-theme="dark"] main .bg-sky-50 { background:#17283e !important; color:#dce8f7 !important; }
+    body[data-theme="dark"] main h2, body[data-theme="dark"] main h3, body[data-theme="dark"] main h4, body[data-theme="dark"] main .text-slate-900, body[data-theme="dark"] main .text-slate-800, body[data-theme="dark"] main .text-slate-700, body[data-theme="dark"] main .text-gray-900, body[data-theme="dark"] main .text-gray-800, body[data-theme="dark"] main .text-gray-700 { color:#e6edf7 !important; }
+    body[data-theme="dark"] main .text-slate-600, body[data-theme="dark"] main .text-slate-500, body[data-theme="dark"] main .text-gray-600, body[data-theme="dark"] main .text-gray-500, body[data-theme="dark"] main label { color:#aabbd0 !important; }
+    body[data-theme="dark"] main input:not([type=checkbox]):not([type=radio]), body[data-theme="dark"] main select, body[data-theme="dark"] main textarea { background:#0b1626 !important; color:#f0f5fc !important; border-color:#354861 !important; }
+    body[data-theme="dark"] main input::placeholder, body[data-theme="dark"] main textarea::placeholder { color:#7f91a8 !important; }
+    body[data-theme="dark"] main input:focus, body[data-theme="dark"] main select:focus, body[data-theme="dark"] main textarea:focus { background:#101f33 !important; border-color:#5d9ce6 !important; box-shadow:0 0 0 3px rgba(59,130,246,.2) !important; }
+    body[data-theme="dark"] main .border-slate-100, body[data-theme="dark"] main .border-slate-200, body[data-theme="dark"] main .border-slate-300, body[data-theme="dark"] main .border-gray-200 { border-color:#2b3c53 !important; }
+    body[data-theme="dark"] main table { color:#dce7f5; }
+    body[data-theme="dark"] main thead th { background:#1b2b41 !important; color:#b9c9dd !important; }
+    body[data-theme="dark"] main tbody tr:hover { background:#1a2a40 !important; }
+    body[data-theme="dark"] main .divide-slate-100 > :not([hidden]) ~ :not([hidden]), body[data-theme="dark"] main .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #calendarGrid > * { border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #attendanceModal > div, body[data-theme="dark"] #quickAttendanceModal > div, body[data-theme="dark"] #payslipModal > div { background:#111e30 !important; color:#e6edf7 !important; border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #attendanceModal label, body[data-theme="dark"] #quickAttendanceModal label, body[data-theme="dark"] #payslipModal label { color:#b6c5d8 !important; }
+    body[data-theme="dark"] #attendanceModal input, body[data-theme="dark"] #attendanceModal select, body[data-theme="dark"] #quickAttendanceModal input, body[data-theme="dark"] #quickAttendanceModal select, body[data-theme="dark"] #payslipModal input, body[data-theme="dark"] #payslipModal select { background:#0b1626 !important; color:#f0f5fc !important; border-color:#354861 !important; }
+    @media (max-width:640px) { body > header > div > div:last-child { gap:.45rem !important; } body > header > div > div:last-child button { justify-content:center; } body > nav > div { scrollbar-width:none; } body > nav > div::-webkit-scrollbar { display:none; } #attendanceModal > div, #quickAttendanceModal > div, #payslipModal > div { max-height:calc(100dvh - 1rem); } }
+    @media print { body, body[data-theme="dark"] { color-scheme:light !important; background:#fff !important; color:#111827 !important; } body > header, body > nav, #avThemeToggle { display:none !important; } }
+
+
+    /* v3.3 UI/UX: responsive dashboard and mobile navigation */
+    #view-dashboard article,#view-dashboard section { min-width:0; }
+    #view-dashboard button,#avBottomNav button { transition:background-color .16s ease,border-color .16s ease,transform .16s ease; }
+    #view-dashboard button:focus-visible,#avBottomNav button:focus-visible { outline:3px solid rgba(36,87,167,.45); outline-offset:2px; }
+    #avBottomNav [aria-current="page"] { background:#eaf2ff; color:#2457a7 !important; }
+    body[data-theme="dark"] #avBottomNav { background:rgba(15,25,42,.97) !important; border-color:#2b3c53 !important; }
+    body[data-theme="dark"] #avBottomNav button { color:#aabbd0 !important; }
+    body[data-theme="dark"] #avBottomNav [aria-current="page"] { background:#1b3658 !important; color:#a9d0ff !important; }
+    body[data-theme="dark"] #view-dashboard .bg-white { background:#111e30 !important; border-color:#283950 !important; color:#e6edf7 !important; }
+    body[data-theme="dark"] #view-dashboard .text-slate-900,body[data-theme="dark"] #view-dashboard .text-slate-800,body[data-theme="dark"] #view-dashboard .text-slate-700 { color:#e6edf7 !important; }
+    body[data-theme="dark"] #view-dashboard .text-slate-500,body[data-theme="dark"] #view-dashboard .text-slate-600 { color:#aabbd0 !important; }
+    body[data-theme="dark"] #view-dashboard .bg-slate-100 { background:#1b2b41 !important; color:#dce8f7 !important; }
+    body[data-theme="dark"] #view-dashboard .border-slate-100,body[data-theme="dark"] #view-dashboard .border-slate-200 { border-color:#2b3c53 !important; }
+    @media (min-width:640px) { #avBottomNav { display:none !important; } }
+    @media (prefers-reduced-motion:reduce) { #view-dashboard button,#avBottomNav button { transition:none !important; } }
+
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-full flex flex-col">
@@ -102,7 +157,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight">AOTAVSEC Salary & Attendance</h1>
-                    <p class="text-xs sm:text-sm text-blue-100">ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล · UI/UX v3.2 · Check In / Check Out</p>
+                    <p class="text-xs sm:text-sm text-blue-100">ระบบเงินเดือนและลงเวลาทำงานส่วนบุคคล · Premium Corporate UI v3.3</p>
                 </div>
             </div>
             <div class="flex items-center flex-wrap gap-2">
@@ -112,6 +167,7 @@
                 <button onclick="app.quickTodayCheckOut()" class="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md transition duration-200 flex items-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> Check Out วันนี้
                 </button>
+                <button id="avThemeToggle" type="button" onclick="toggleAvTheme()" title="สลับ Dark Mode / Light Mode" aria-label="สลับธีม" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-semibold border border-white/20"><i id="avThemeIcon" class="fa-solid fa-moon mr-1"></i><span id="avThemeLabel">Dark Mode</span></button>
                 <button onclick="app.syncNow()" title="ซิงก์ข้อมูลกับ Google Sheets" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-semibold border border-white/20"><i class="fa-solid fa-rotate mr-1"></i> ซิงก์</button>
                 <span id="syncStatus" role="button" tabindex="0" title="คลิกเพื่อดูสถานะและข้อมูลขัดแย้ง" class="cursor-pointer text-xs px-2 py-1 rounded-lg bg-white/15 border border-white/20">กำลังเชื่อมต่อฐานข้อมูล…</span>
                 <button onclick="app.resetForm()" class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition duration-200 border border-white/20 flex items-center gap-1.5">
@@ -124,7 +180,8 @@
     <!-- Navigation Tabs -->
     <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-4 sm:space-x-8 overflow-x-auto">
-            <button onclick="app.switchTab('calculator')" id="tab-calculator" class="py-4 px-2 border-b-2 font-medium text-sm border-blue-600 text-blue-600 flex items-center gap-2 whitespace-nowrap">
+            <button onclick="app.switchTab('dashboard')" id="tab-dashboard" class="py-4 px-2 border-b-2 font-medium text-sm border-blue-600 text-blue-600 flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-gauge-high"></i> หน้าหลัก</button>
+            <button onclick="app.switchTab('calculator')" id="tab-calculator" class="py-4 px-2 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-file-invoice-dollar"></i> คำนวณเงินเดือน
             </button>
             <button onclick="app.switchTab('calendar')" id="tab-calendar" class="py-4 px-2 border-b-2 font-medium text-sm border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 flex items-center gap-2 whitespace-nowrap">
@@ -140,10 +197,39 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 sm:pb-8">
+
+        <!-- v3.3 Dashboard: display-only summaries mirrored from existing calculator and attendance data -->
+        <section id="view-dashboard" class="space-y-6">
+            <div class="rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
+                <div class="p-5 sm:p-7 text-white" style="background:linear-gradient(115deg,#10233f 0%,#1c4777 62%,#0f777b 100%)">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div><p class="text-xs uppercase tracking-[.18em] text-blue-100 mb-2">AOTAVSEC · PREMIUM CORPORATE</p><h2 class="text-2xl sm:text-3xl font-bold">ภาพรวมการทำงาน</h2><p class="text-sm text-blue-100 mt-2">เงินเดือน · การลงเวลา · OT · ประวัติ</p></div>
+                        <div class="flex flex-wrap gap-2"><button onclick="app.quickTodayCheckIn()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-xl text-sm font-semibold"><i class="fa-solid fa-right-to-bracket mr-2"></i>Check-in</button><button onclick="app.quickTodayCheckOut()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-3 rounded-xl text-sm font-semibold"><i class="fa-solid fa-right-from-bracket mr-2"></i>Check-out + OT</button></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-slate-200">
+                    <div class="bg-white p-4 sm:p-5"><p class="text-xs text-slate-500 mb-1">พนักงาน</p><p id="dashEmployee" class="font-semibold text-slate-900 break-words">—</p><p id="dashPosition" class="text-xs text-slate-500 mt-1">—</p></div>
+                    <div class="bg-white p-4 sm:p-5"><p class="text-xs text-slate-500 mb-1">งวดเงินเดือน</p><p id="dashPeriod" class="font-semibold text-slate-900">—</p><p class="text-xs text-slate-500 mt-1">อ้างอิงข้อมูลในเครื่องคำนวณเดิม</p></div>
+                    <div class="bg-white p-4 sm:p-5"><p class="text-xs text-slate-500 mb-1">สถานะฐานข้อมูล</p><p id="dashSyncText" class="font-semibold text-slate-900">กำลังตรวจสอบ…</p><p class="text-xs text-slate-500 mt-1">ตรวจสอบรายละเอียดได้ที่แถบด้านบน</p></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">เงินสุทธิประมาณการ</p><span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center"><i class="fa-solid fa-wallet"></i></span></div><p id="dashNet" class="text-2xl font-bold text-slate-900 mt-3">฿0.00</p><button onclick="app.switchTab('calculator')" class="text-xs text-blue-700 font-semibold mt-3">ดูรายละเอียดเงินเดือน <i class="fa-solid fa-arrow-right ml-1"></i></button></article>
+                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">รายรับรวม</p><span class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center"><i class="fa-solid fa-chart-line"></i></span></div><p id="dashIncome" class="text-2xl font-bold text-slate-900 mt-3">฿0.00</p><p class="text-xs text-slate-500 mt-3">ตามสูตรคำนวณเดิม</p></article>
+                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">รายการหักรวม</p><span class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center"><i class="fa-solid fa-file-invoice"></i></span></div><p id="dashDeduction" class="text-2xl font-bold text-slate-900 mt-3">฿0.00</p><p class="text-xs text-slate-500 mt-3">ตามสูตรคำนวณเดิม</p></article>
+                <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5"><div class="flex items-center justify-between"><p class="text-sm text-slate-500">OT ในเครื่องคำนวณ</p><span class="w-10 h-10 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center"><i class="fa-solid fa-clock"></i></span></div><p id="dashOtHours" class="text-2xl font-bold text-slate-900 mt-3">0 ชม.</p><p class="text-xs text-slate-500 mt-3">ตรวจสอบประเภท OT ในหน้าคำนวณ</p></article>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                <section class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6"><div class="flex items-center justify-between mb-4"><div><h3 class="text-lg font-semibold text-slate-900">ทางลัดการใช้งาน</h3><p class="text-xs text-slate-500 mt-1">ไปยังส่วนที่ใช้บ่อยได้ทันที</p></div><i class="fa-solid fa-bolt text-blue-600 text-xl"></i></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3"><button onclick="app.switchTab('calculator')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-calculator text-blue-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">คำนวณเงินเดือน</span><span class="block text-xs text-slate-500 mt-1">รายรับ รายการหัก และเงินสุทธิ</span></button><button onclick="app.switchTab('calendar')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-calendar-days text-emerald-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">ปฏิทินลงเวลา</span><span class="block text-xs text-slate-500 mt-1">ดูวันทำงานและเวลาเข้า–ออก</span></button><button onclick="app.switchTab('history')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-clock-rotate-left text-violet-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">ประวัติสลิปเงินเดือน</span><span class="block text-xs text-slate-500 mt-1">ค้นหาและตรวจสอบรายการที่บันทึก</span></button><button onclick="app.switchTab('reports')" class="text-left border border-slate-200 rounded-xl p-4 hover:border-blue-300"><i class="fa-solid fa-chart-column text-amber-700 text-lg"></i><span class="block font-semibold text-slate-800 mt-2">รายงานและส่งออก</span><span class="block text-xs text-slate-500 mt-1">สรุปรายเดือนและสำรองข้อมูล</span></button></div>
+                </section>
+                <section class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6"><div class="flex items-center justify-between mb-4"><div><h3 class="text-lg font-semibold text-slate-900">การลงเวลาวันนี้</h3><p id="dashTodayDate" class="text-xs text-slate-500 mt-1">—</p></div><i class="fa-solid fa-calendar-check text-emerald-600 text-xl"></i></div><div class="space-y-3"><div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3"><span class="text-sm text-slate-500">เวลาเข้า</span><strong id="dashCheckIn" class="text-slate-900">ยังไม่มีข้อมูล</strong></div><div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3"><span class="text-sm text-slate-500">เวลาออก</span><strong id="dashCheckOut" class="text-slate-900">ยังไม่มีข้อมูล</strong></div><div class="flex items-center justify-between gap-3"><span class="text-sm text-slate-500">OT วันนี้</span><strong id="dashTodayOt" class="text-slate-900">—</strong></div></div><button onclick="app.switchTab('calendar')" class="mt-5 w-full rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm px-4 py-3"><i class="fa-solid fa-calendar-days mr-2"></i>เปิดปฏิทิน</button></section>
+            </div>
+        </section>
 
         <!-- Tab 1: Calculator View -->
-        <div id="view-calculator" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div id="view-calculator" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
             <!-- Left Panel: Form Inputs -->
             <div class="lg:col-span-7 space-y-6">
                 
@@ -548,6 +634,17 @@
         </div>
 
     </main>
+
+    <nav id="avBottomNav" aria-label="เมนูหลักบนมือถือ" class="fixed bottom-0 inset-x-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-lg shadow-lg sm:hidden">
+      <div class="grid grid-cols-5 max-w-xl mx-auto px-2 py-2">
+        <button onclick="app.switchTab('dashboard')" data-av-bottom="dashboard" class="flex flex-col items-center gap-1 py-2 rounded-xl text-blue-700"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-semibold">หน้าหลัก</span></button>
+        <button onclick="app.switchTab('calendar')" data-av-bottom="calendar" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-calendar-days text-lg"></i><span class="text-[10px] font-semibold">ปฏิทิน</span></button>
+        <button onclick="app.switchTab('calculator')" data-av-bottom="calculator" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-calculator text-lg"></i><span class="text-[10px] font-semibold">เงินเดือน</span></button>
+        <button onclick="app.switchTab('history')" data-av-bottom="history" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-clock-rotate-left text-lg"></i><span class="text-[10px] font-semibold">ประวัติ</span></button>
+        <button onclick="app.switchTab('reports')" data-av-bottom="reports" class="flex flex-col items-center gap-1 py-2 rounded-xl text-slate-500"><i class="fa-solid fa-chart-column text-lg"></i><span class="text-[10px] font-semibold">รายงาน</span></button>
+      </div>
+    </nav>
+
 
     <!-- Quick Check In / Check Out workflow -->
     <div id="quickAttendanceModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden items-center justify-center p-4">
@@ -1131,12 +1228,14 @@
 
             switchTab(tab) {
                 const views = {
+                    dashboard: document.getElementById('view-dashboard'),
                     calculator: document.getElementById('view-calculator'),
                     calendar: document.getElementById('view-calendar'),
                     history: document.getElementById('view-history'),
                     reports: document.getElementById('view-reports')
                 };
                 const tabs = {
+                    dashboard: document.getElementById('tab-dashboard'),
                     calculator: document.getElementById('tab-calculator'),
                     calendar: document.getElementById('tab-calendar'),
                     history: document.getElementById('tab-history'),
@@ -1153,6 +1252,7 @@
                     }
                 });
 
+                if (window.refreshAvDashboard) window.refreshAvDashboard();
                 if (tab === 'calendar') this.renderCalendar();
                 if (tab === 'history') this.renderHistory();
                 if (tab === 'reports') this.renderReport();
@@ -2067,7 +2167,9 @@
                 const money = n => (Number(n)||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
                 const esc = v => this.escapeHtml(v);
                 const pages = slips.map((r,i) => `<section class="slip ${i ? 'page-break' : ''}"><header><div><h1>AOTAVSEC · Salary & Attendance</h1><p>สลิปสรุปเงินเดือนส่วนบุคคล</p></div><div class="right"><h2>${esc(r.period || '-')}</h2><span class="status ${r.salaryStatus==='confirmed'?'confirmed':'estimated'}">${r.salaryStatus==='confirmed'?'ยืนยันแล้ว':'ประมาณการ'}</span></div></header><div class="person"><div><small>ชื่อพนักงาน</small><b>${esc(r.name||'-')}</b></div><div><small>ตำแหน่ง</small><b>${esc(r.position||'-')}</b></div><div><small>วันที่บันทึก</small><b>${esc(r.date||'-')}</b></div><div><small>วันทำงาน</small><b>${esc(r.workDays??'-')}</b></div></div><table><thead><tr><th>รายการรายรับ / รายการหัก</th><th class="right">จำนวนเงิน (บาท)</th></tr></thead><tbody><tr><td>เงินเดือนตั้งต้น</td><td class="right">${money(r.baseSalary)}</td></tr><tr><td>รายรับรายวันรวม</td><td class="right">${money((Number(r.dailyIncomeRate)||0)*(Number(r.workDays)||0))}</td></tr><tr><td>ค่าเข้ากะ</td><td class="right">${money(r.shiftAllowance)}</td></tr><tr><td>ค่าล่วงเวลา OT (${money(r.otHoursTotal??r.otHours)} ชม.)</td><td class="right">${money(r.otPay)}</td></tr><tr><td>ค่าคอมมิชชั่น / เบี้ยเลี้ยง / รายรับอื่น</td><td class="right">${money((Number(r.commission)||0)+(Number(r.allowance)||0)+(Number(r.otherIncome)||0))}</td></tr><tr class="total"><td>รายรับรวม</td><td class="right">${money(r.totalIncome)}</td></tr><tr><td>ประกันสังคม</td><td class="right">${money(r.socialSecurity)}</td></tr><tr><td>หักเบี้ยสำรองชีพ</td><td class="right">${money(r.tax)}</td></tr><tr><td>รายการหักอื่น ๆ</td><td class="right">${money(Math.max(0,(Number(r.totalDeduction)||0)-(Number(r.socialSecurity)||0)-(Number(r.tax)||0)))}</td></tr><tr class="total"><td>รายการหักรวม</td><td class="right">${money(r.totalDeduction)}</td></tr></tbody></table><div class="net"><span>เงินสุทธิ</span><strong>${money(r.netSalary)} บาท</strong></div><p class="note">เอกสารนี้สร้างจากข้อมูลที่บันทึกในแอป ไม่ใช่เอกสารรับรองจากนายจ้าง และสถานะ “ยืนยันแล้ว” เป็นสถานะที่ผู้ใช้กำหนดเอง</p></section>`).join('');
-                win.document.open(); win.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,'Tahoma',sans-serif;color:#1e293b;margin:0;font-size:12px}.slip{padding:2mm}.page-break{break-before:page;page-break-before:always}header{display:flex;justify-content:space-between;border-bottom:2px solid #2563eb;padding-bottom:12px;margin-bottom:18px}h1{font-size:19px;margin:0 0 5px}h2{font-size:16px;margin:0 0 8px}p{margin:0;color:#64748b}.right{text-align:right}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px}.confirmed{background:#dcfce7;color:#166534}.estimated{background:#fef3c7;color:#92400e}.person{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f8fafc;padding:14px;border-radius:8px;margin-bottom:18px}.person small{display:block;color:#64748b;margin-bottom:5px}.person b{font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f1f5f9}.total{font-weight:bold;background:#f8fafc}.net{margin-top:18px;padding:16px;background:#0f172a;color:white;border-radius:8px;display:flex;justify-content:space-between;align-items:center}.net strong{font-size:21px;color:#6ee7b7}.note{margin-top:14px;font-size:10px}@media screen{body{max-width:850px;margin:24px auto;padding:20px}.slip{border:1px solid #ddd;margin-bottom:20px;padding:25px}.page-break{border-top:3px dashed #aaa;padding-top:25px}}@media print{.page-break{break-before:page}}</style></head><body>${pages}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script></body></html>`); win.document.close();
+                win.document.open(); win.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:14mm}*{box-sizing:border-box}body{font-family:Arial,'Tahoma',sans-serif;color:#1e293b;margin:0;font-size:12px}.slip{padding:2mm}.page-break{break-before:page;page-break-before:always}header{display:flex;justify-content:space-between;border-bottom:2px solid #2563eb;padding-bottom:12px;margin-bottom:18px}h1{font-size:19px;margin:0 0 5px}h2{font-size:16px;margin:0 0 8px}p{margin:0;color:#64748b}.right{text-align:right}.status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:11px}.confirmed{background:#dcfce7;color:#166534}.estimated{background:#fef3c7;color:#92400e}.person{display:grid;grid-template-columns:1fr 1fr;gap:12px;background:#f8fafc;padding:14px;border-radius:8px;margin-bottom:18px}.person small{display:block;color:#64748b;margin-bottom:5px}.person b{font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f1f5f9}.total{font-weight:bold;background:#f8fafc}.net{margin-top:18px;padding:16px;background:#0f172a;color:white;border-radius:8px;display:flex;justify-content:space-between;align-items:center}.net strong{font-size:21px;color:#6ee7b7}.note{margin-top:14px;font-size:10px}@media screen{body{max-width:850px;margin:24px auto;padding:20px}.slip{border:1px solid #ddd;margin-bottom:20px;padding:25px}.page-break{border-top:3px dashed #aaa;padding-top:25px}}@media print{.page-break{break-before:page}}</style></head><body>${pages}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script>
+
+</body></html>`); win.document.close();
             }
 
             exportAnnualCsv() {
@@ -2213,5 +2315,46 @@
 
         const app = new SalaryApp();
     </script>
+<script>
+/* Theme preference only; does not modify salary or attendance data. */
+(function () {
+  const KEY = 'aotavsec_ui_theme';
+  function applyTheme(theme, save) {
+    const selected = theme === 'dark' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', selected);
+    document.documentElement.style.colorScheme = selected;
+    const icon = document.getElementById('avThemeIcon');
+    const label = document.getElementById('avThemeLabel');
+    const button = document.getElementById('avThemeToggle');
+    if (icon) icon.className = selected === 'dark' ? 'fa-solid fa-sun mr-1' : 'fa-solid fa-moon mr-1';
+    if (label) label.textContent = selected === 'dark' ? 'Light Mode' : 'Dark Mode';
+    if (button) button.setAttribute('aria-label', selected === 'dark' ? 'เปลี่ยนเป็น Light Mode' : 'เปลี่ยนเป็น Dark Mode');
+    if (save) { try { localStorage.setItem(KEY, selected); } catch (e) {} }
+  }
+  window.toggleAvTheme = function () { applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true); };
+  let saved = 'light';
+  try { saved = localStorage.getItem(KEY) || 'light'; } catch (e) {}
+  applyTheme(saved, false);
+})();
+</script>
+
+<script>
+(function(){
+ const el=id=>document.getElementById(id), val=id=>{const e=el(id);return e?String(e.value||'').trim():'';}, txt=id=>{const e=el(id);return e?(e.textContent||'').trim():'—';}, set=(id,v)=>{const e=el(id);if(e)e.textContent=v;};
+ function dateKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+ function currency(id){let t=txt(id);if(!t||t==='—')return '฿0.00';return t.includes('฿')?t:'฿'+t;}
+ window.refreshAvDashboard=function(){
+  set('dashEmployee',val('empName')||'ยังไม่ได้ระบุชื่อ');set('dashPosition',val('empPosition')||'ยังไม่ได้ระบุตำแหน่ง');set('dashPeriod',val('payPeriod')||'ยังไม่ได้ระบุงวด');
+  set('dashNet',currency('resNetSalary'));set('dashIncome',currency('resTotalIncome'));set('dashDeduction',currency('resTotalDeduction'));
+  let h=0;['otHours','otWeekdayHours','otHolidayHours','otHolidayOvertimeHours'].forEach(id=>{let n=Number(val(id));if(Number.isFinite(n)&&n>0)h+=n;});set('dashOtHours',h.toLocaleString('th-TH',{maximumFractionDigits:2})+' ชม.');
+  set('dashSyncText',txt('syncStatus')|| (navigator.onLine?'ออนไลน์':'ออฟไลน์'));let d=new Date();set('dashTodayDate',d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
+  let r=window.app&&app.attendanceData?app.attendanceData[dateKey()]:null;set('dashCheckIn',r&&(r.actualCheckIn||r.checkIn||r.checkInTime)?(r.actualCheckIn||r.checkIn||r.checkInTime):'ยังไม่มีข้อมูล');set('dashCheckOut',r&&(r.actualCheckOut||r.checkOut||r.checkOutTime)?(r.actualCheckOut||r.checkOut||r.checkOutTime):'ยังไม่มีข้อมูล');set('dashTodayOt',r&&r.otHours!==undefined?String(r.otHours)+' ชม.':'—');
+  document.querySelectorAll('[data-av-bottom]').forEach(b=>{let v=el('view-'+b.dataset.avBottom);if(v&&!v.classList.contains('hidden'))b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+ };
+ ['empName','empPosition','payPeriod','otHours','otWeekdayHours','otHolidayHours','otHolidayOvertimeHours'].forEach(id=>{let e=el(id);if(e){e.addEventListener('input',window.refreshAvDashboard);e.addEventListener('change',window.refreshAvDashboard);}});
+ ['resNetSalary','resTotalIncome','resTotalDeduction','syncStatus'].forEach(id=>{let e=el(id);if(e&&window.MutationObserver)new MutationObserver(window.refreshAvDashboard).observe(e,{childList:true,subtree:true,characterData:true});});
+ window.addEventListener('load',()=>{window.refreshAvDashboard();setTimeout(window.refreshAvDashboard,250);});
+})();
+</script>
 </body>
 </html>
