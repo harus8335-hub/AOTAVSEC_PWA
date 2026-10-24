@@ -7,7 +7,7 @@
     <meta name="description" content="เครื่องมือส่วนตัวสำหรับลงเวลาทำงาน คำนวณเงินเดือน OT หลายประเภท และบันทึกสลิป AOTAVSEC v3.0 Phase 5">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./icons/icon-192.png" type="image/png">
-    <title>AOTAVSEC Salary Calculator v4.0 Corporate Dashboard</title>
+    <title>AOTAVSEC Salary Calculator v4.2 Corporate Dashboard</title>
     <script>(function(){var t;try{t=localStorage.getItem('salary_theme');}catch(e){}if(t!=='dark'&&t!=='light'){t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -213,6 +213,7 @@
     .dx-split-legend b { color:#fff; font-weight:600; margin-left:.25rem; }
     .dx-split-legend .dot { display:inline-block; width:.6rem; height:.6rem; border-radius:50%; margin-right:.4rem; }
     .dx-split-legend .dot.net { background:#4fd1a8; } .dx-split-legend .dot.ded { background:#f2788e; }
+    @media (min-width:1024px){ .dx-net { justify-content:space-between; } }
     .dx-net-actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:auto; }
     .dx-net-actions .dx-btn { flex:1 1 9rem; }
 
@@ -329,6 +330,88 @@
     html[data-theme="dark"] .bg-slate-900\/60 { background-color:rgba(3,10,22,.7) !important; }
     html[data-theme="dark"] .ring-blue-500 { --tw-ring-color:var(--brand) !important; }
 
+    
+    /* ============================================================
+       v4.1 additions: toast, trend card, reminder banner, mobile cards
+       ============================================================ */
+    .toast-host { position:fixed; z-index:80; left:0; right:0; bottom:calc(5.9rem + env(safe-area-inset-bottom,0px)); display:flex; flex-direction:column; align-items:center; gap:.5rem; padding:0 .8rem; pointer-events:none; }
+    @media (min-width:768px){ .toast-host { left:auto; right:1.25rem; bottom:1.25rem; align-items:flex-end; padding:0; } }
+    .toast { pointer-events:auto; display:flex; gap:.7rem; align-items:flex-start; width:100%; max-width:26rem; background:var(--navy); color:#fff; border:1px solid var(--navy-2); border-left:4px solid var(--pos); border-radius:10px; padding:.75rem .9rem; font-size:.86rem; line-height:1.5; white-space:pre-line; cursor:pointer; box-shadow:0 10px 30px rgba(4,14,30,.35); animation:toastIn .2s ease both; box-sizing:border-box; }
+    .toast i { margin-top:.2rem; color:#5be0b6; }
+    .toast[data-type="error"] { border-left-color:#f2788e; } .toast[data-type="error"] i { color:#f2788e; }
+    .toast[data-type="warn"] { border-left-color:#e3ad4c; } .toast[data-type="warn"] i { color:#e3ad4c; }
+    @keyframes toastIn { from{transform:translateY(10px);opacity:0} to{transform:none;opacity:1} }
+
+    .dx-alert { display:flex; align-items:center; justify-content:space-between; gap:.6rem; flex-wrap:wrap; background:var(--warn-soft); color:var(--warn); border:1px solid color-mix(in srgb,var(--warn) 40%,transparent); border-radius:10px; padding:.6rem .8rem; font-size:.82rem; line-height:1.45; }
+    .dx-alert[hidden] { display:none; }
+    .dx-alert-btn { background:var(--warn-btn); color:#fff; font-weight:600; font-size:.8rem; padding:.4rem .8rem; border-radius:8px; min-height:36px; }
+
+    .dx-delta { font-size:.84rem; color:var(--on-navy-2); margin-top:-.25rem; }
+    .dx-delta[hidden] { display:none; }
+    .dx-delta b { color:#fff; font-weight:600; }
+    .dx-delta .up { color:#5be0b6; } .dx-delta .down { color:#ff9aab; }
+
+    .dx-legend { display:flex; gap:.9rem; font-size:.76rem; color:var(--ink-3); flex-wrap:wrap; }
+    .dx-legend .k { display:inline-block; width:.65rem; height:.65rem; border-radius:3px; margin-right:.35rem; vertical-align:-1px; }
+    .dx-legend .k.inc, .dx-trend .inc { background:var(--btn); }
+    .dx-legend .k.net, .dx-trend .net { background:var(--pos); opacity:.8; }
+    .dx-trend { display:grid; grid-template-columns:repeat(6,1fr); gap:.5rem; height:9.5rem; margin-top:1rem; }
+    .dx-trend .col { display:flex; flex-direction:column; align-items:center; gap:.35rem; min-width:0; }
+    .dx-trend .bars { flex:1; min-height:0; width:100%; display:flex; align-items:flex-end; justify-content:center; gap:3px; border-bottom:1px solid var(--line-strong); }
+    .dx-trend .bars i { display:block; width:36%; max-width:1.5rem; min-height:2px; border-radius:4px 4px 0 0; transition:height .3s ease; }
+    .dx-trend .col.empty .bars i { background:var(--line); opacity:1; }
+    .dx-trend small { font-size:.72rem; color:var(--ink-3); white-space:nowrap; }
+    .dx-trend .col.now small { color:var(--brand); font-weight:600; }
+    .dx-empty { grid-column:1 / -1; align-self:center; text-align:center; color:var(--ink-3); font-size:.86rem; line-height:1.6; }
+    .dx-trend-wrap { margin-top:.2rem; }
+
+    /* History + report tables become cards on phones */
+    @media (max-width:767px){
+      #view-history .overflow-x-auto, #view-reports .overflow-x-auto { overflow:visible; }
+      #view-history table, #view-history tbody, #view-history tr, #view-history td,
+      #view-reports table, #view-reports tbody, #view-reports tr, #view-reports td { display:block; }
+      #view-history thead, #view-reports thead { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+      #historyTableBody tr, #reportHistoryBody tr { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:.75rem 1rem; margin-bottom:.7rem; box-shadow:var(--shadow); }
+      #historyTableBody tr:hover, #reportHistoryBody tr:hover { background:var(--surface) !important; }
+      #historyTableBody td, #reportHistoryBody td { padding:.3rem 0 !important; border:0 !important; }
+      #historyTableBody td:nth-child(n+3), #reportHistoryBody td:nth-child(n+2) { display:flex; justify-content:space-between; align-items:baseline; gap:1rem; text-align:right !important; }
+      #historyTableBody td:nth-child(1), #reportHistoryBody td:nth-child(1) { font-size:1rem; padding-bottom:.4rem !important; border-bottom:1px solid var(--line) !important; margin-bottom:.3rem; }
+      #historyTableBody td:nth-child(2) { text-align:left !important; color:var(--ink-2); padding-bottom:.45rem !important; }
+      #historyTableBody td:nth-child(2) > div { display:inline-block; margin:0 0 0 .5rem !important; }
+      #historyTableBody td:nth-child(3)::before, #reportHistoryBody td:nth-child(3)::before { content:"รายรับรวม"; }
+      #historyTableBody td:nth-child(4)::before, #reportHistoryBody td:nth-child(4)::before { content:"หักรวม"; }
+      #historyTableBody td:nth-child(5)::before, #reportHistoryBody td:nth-child(5)::before { content:"เงินสุทธิ"; }
+      #reportHistoryBody td:nth-child(2)::before { content:"งวด"; }
+      #historyTableBody td:nth-child(n+3)::before, #reportHistoryBody td:nth-child(n+2)::before { color:var(--ink-3); font-weight:500; font-size:.82rem; text-align:left; }
+      #historyTableBody td:nth-child(6) { justify-content:flex-end; flex-wrap:wrap; gap:.4rem; padding-top:.6rem !important; border-top:1px solid var(--line) !important; margin-top:.3rem; }
+      #historyTableBody td:nth-child(6)::before { content:none; }
+      #historyTableBody td[colspan], #reportHistoryBody td[colspan] { display:block; text-align:center !important; }
+      #historyTableBody tr:has(td[colspan]), #reportHistoryBody tr:has(td[colspan]) { border-style:dashed; box-shadow:none; }
+      #historyTableBody td[colspan]::before, #reportHistoryBody td[colspan]::before { content:none; }
+    }
+    
+    /* ============================================================
+       v4.2: shift selector (กะปกติ / กะเช้า / กะบ่าย)
+       ============================================================ */
+    .shift-seg { border:0; padding:0; margin:0; min-width:0; }
+    .shift-seg > legend { font-size:.75rem; font-weight:500; color:var(--ink-2); margin-bottom:.35rem; padding:0; }
+    .shift-opts { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }
+    .shift-opts label { position:relative; display:block; cursor:pointer; margin:0; }
+    .shift-opts input { position:absolute; opacity:0; inset:0; width:100%; height:100%; cursor:pointer; margin:0; }
+    .shift-opts span { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.1rem; min-height:56px; padding:.45rem .3rem; text-align:center; background:var(--surface); border:1.5px solid var(--line-strong); border-radius:10px; color:var(--ink-2); transition:border-color .15s ease,background-color .15s ease; }
+    .shift-opts b { font-size:.88rem; font-weight:600; color:var(--ink); }
+    .shift-opts small { font-size:.74rem; color:var(--ink-3); }
+    .shift-opts label:hover span { border-color:var(--brand); }
+    .shift-opts input:checked + span { border-color:var(--btn); background:var(--brand-soft); box-shadow:0 0 0 1px var(--btn); }
+    .shift-opts input:checked + span b { color:var(--brand); }
+    .shift-opts input:focus-visible + span { outline:3px solid var(--focus); outline-offset:2px; }
+    .shift-seg:disabled .shift-opts { opacity:.45; pointer-events:none; }
+    .shift-hint { font-size:.74rem; color:var(--ink-3); margin-top:.35rem; }
+    .shift-hint[hidden] { display:none; }
+    .dx-shiftline { display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; font-size:.84rem; color:var(--ink-2); }
+    .dx-shiftline b { color:var(--ink); font-weight:600; }
+    .dx-shiftline button { font-size:.8rem; font-weight:600; color:var(--brand); padding:.25rem .6rem; border-radius:8px; min-height:32px; }
+    .dx-shiftline button:hover { background:var(--brand-soft); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-full flex flex-col">
@@ -393,6 +476,8 @@
                     <div><span>ออกงาน</span><b data-punch-out>--:--</b></div>
                     <div><span>ทำงาน</span><b data-punch-hours>-</b></div>
                 </div>
+                    <div class="dx-shiftline"><span>กะวันนี้: <b data-punch-shift>-</b></span><button type="button" onclick="app.closePunchSheet(); app.quickTodayCheckIn()">เปลี่ยนกะ</button></div>
+                    <div class="dx-alert" data-punch-alert hidden role="status"><span><i class="fa-solid fa-bell" aria-hidden="true"></i> <span data-alert-text></span></span><button type="button" class="dx-alert-btn" onclick="app.closePunchSheet(); app.quickTodayCheckOut()">Check Out ตอนนี้</button></div>
                     <div class="dx-punch-actions">
                         <button type="button" class="dx-punch-btn" data-punch-action="in" data-primary="true" onclick="app.quickTodayCheckIn()"><i class="fa-solid fa-right-to-bracket"></i><span>Check In</span></button>
                         <button type="button" class="dx-punch-btn" data-punch-action="out" onclick="app.quickTodayCheckOut()"><i class="fa-solid fa-right-from-bracket"></i><span>Check Out</span></button>
@@ -411,6 +496,7 @@
                             <span><i class="dot ded"></i>ถูกหัก<b id="dxPctDed">0%</b></span>
                         </div>
                     </div>
+                    <p class="dx-delta" id="dxDelta" hidden></p>
                     <div class="dx-net-actions">
                         <button type="button" class="dx-btn dx-btn-solid" onclick="app.saveRecord()"><i class="fa-solid fa-floppy-disk"></i> บันทึกข้อมูล</button>
                         <button type="button" class="dx-btn dx-btn-onnavy" onclick="app.openPayslipModal()"><i class="fa-solid fa-print"></i> ดูสลิปเงินเดือน</button>
@@ -439,6 +525,12 @@
                     <div class="dx-kpi-value"><span id="dxWorkDays">0</span><small>วัน</small></div>
                     <div class="dx-kpi-sub" id="dxWorkSub">-</div>
                 </div>
+            </section>
+
+            <section class="dx-card dx-trend-wrap" aria-label="แนวโน้มรายได้">
+                <div class="dx-punch-head"><span class="dx-label">แนวโน้มรายได้ 6 เดือนล่าสุด</span><span class="dx-legend"><span><i class="k inc"></i>รายรับรวม</span><span><i class="k net"></i>เงินสุทธิ</span></span></div>
+                <div class="dx-trend" id="dxTrend"></div>
+                <p class="dx-hint" id="dxTrendNote" style="margin-top:.6rem"></p>
             </section>
 
             <section class="dx-links" aria-label="ทางลัด">
@@ -716,7 +808,7 @@
                     <div class="bg-orange-50 border border-orange-100 rounded-2xl p-4">
                         <div class="text-xs text-orange-600 font-medium">ค่ากะรวม</div>
                         <div class="text-xl font-bold text-orange-700 mt-1" id="calStatShiftAllowance">0 ฿</div>
-                        <div class="text-[10px] text-orange-500 mt-0.5" id="calStatShiftBreakdown">ข้อมูลกะเดิมเท่านั้น</div>
+                        <div class="text-[10px] text-orange-500 mt-0.5" id="calStatShiftBreakdown">เช้า (0) / บ่าย (0)</div>
                     </div>
                     <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4">
                         <div class="text-xs text-blue-600 font-medium">ชั่วโมง OT รวม</div>
@@ -888,7 +980,9 @@
                     <div><span>ออกงาน</span><b data-punch-out>--:--</b></div>
                     <div><span>ทำงาน</span><b data-punch-hours>-</b></div>
                 </div>
-            <div class="dx-punch-actions">
+            <div class="dx-shiftline"><span>กะวันนี้: <b data-punch-shift>-</b></span><button type="button" onclick="app.closePunchSheet(); app.quickTodayCheckIn()">เปลี่ยนกะ</button></div>
+                    <div class="dx-alert" data-punch-alert hidden role="status"><span><i class="fa-solid fa-bell" aria-hidden="true"></i> <span data-alert-text></span></span><button type="button" class="dx-alert-btn" onclick="app.closePunchSheet(); app.quickTodayCheckOut()">Check Out ตอนนี้</button></div>
+                    <div class="dx-punch-actions">
                 <button type="button" class="dx-punch-btn" data-punch-action="in" data-primary="true" onclick="app.closePunchSheet(); app.quickTodayCheckIn()"><i class="fa-solid fa-right-to-bracket"></i><span>Check In</span></button>
                 <button type="button" class="dx-punch-btn" data-punch-action="out" onclick="app.closePunchSheet(); app.quickTodayCheckOut()"><i class="fa-solid fa-right-from-bracket"></i><span>Check Out</span></button>
             </div>
@@ -908,11 +1002,12 @@
             <div class="p-6 space-y-4">
                 <div class="rounded-xl bg-slate-50 border border-slate-200 p-3"><div class="text-xs text-slate-500">วันที่</div><div id="quickAttendanceDate" class="font-semibold text-slate-800"></div></div>
                 <div id="quickCheckInFields" class="hidden space-y-4">
-                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs text-blue-800">กรอกเวลาเริ่มและเลิกงานตามตารางของคุณได้เอง ไม่มีการกำหนดกะล่วงหน้า ระบบจะจำเวลาล่าสุดไว้ให้แก้ไขครั้งถัดไป</div>
+                    <div class="rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs text-blue-800">เลือกกะของวันนี้เพื่อคิดค่ากะ แล้วกรอกเวลาตามตารางของคุณได้เอง ระบบจะจำกะและเวลาล่าสุดไว้ให้ครั้งถัดไป</div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div><label for="quickScheduleStart" class="block text-xs font-medium text-slate-600 mb-1">เวลาเริ่มกะ / ตามตาราง</label><input type="time" id="quickScheduleStart" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm"></div>
                         <div><label for="quickScheduleEnd" class="block text-xs font-medium text-slate-600 mb-1">เวลาเลิกกะ / ตามตาราง</label><input type="time" id="quickScheduleEnd" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm"></div>
                     </div>
+                    <div><fieldset class="shift-seg"><legend>กะการทำงาน (ค่ากะ)</legend><div class="shift-opts"><label><input type="radio" name="quickShift" value="NONE" checked><span><b>กะปกติ</b><small>0 ฿</small></span></label><label><input type="radio" name="quickShift" value="MORNING"><span><b>กะเช้า</b><small>+32 ฿</small></span></label><label><input type="radio" name="quickShift" value="AFTERNOON"><span><b>กะบ่าย</b><small>+48 ฿</small></span></label></div></fieldset></div>
                     <div><label for="quickActualCheckIn" class="block text-xs font-medium text-slate-600 mb-1">เวลา Check In จริง</label><input type="time" id="quickActualCheckIn" class="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm"></div>
                 </div>
                 <div id="quickCheckOutFields" class="hidden space-y-4">
@@ -959,7 +1054,7 @@
                     </select>
                 </div>
 
-                <p class="text-xs text-slate-500 -mt-2">ไม่ต้องเลือกกะสำเร็จรูป สามารถกรอกเวลาเริ่มงานและเลิกงานให้ตรงกับวันที่ทำงานจริงได้</p>
+                <div><fieldset class="shift-seg" id="attShiftGroup"><legend>กะการทำงาน (ค่ากะ)</legend><div class="shift-opts"><label><input type="radio" name="attShift" value="NONE" checked><span><b>กะปกติ</b><small>0 ฿</small></span></label><label><input type="radio" name="attShift" value="MORNING"><span><b>กะเช้า</b><small>+32 ฿</small></span></label><label><input type="radio" name="attShift" value="AFTERNOON"><span><b>กะบ่าย</b><small>+48 ฿</small></span></label></div></fieldset><p class="shift-hint" id="attShiftNote" hidden>ค่ากะคิดเฉพาะวันที่สถานะ “มาทำงาน”</p><p class="shift-hint">เลือกกะเพื่อคิดค่ากะ ส่วนเวลาเข้า-ออกกรอกตามจริงได้อิสระ</p></div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -1155,7 +1250,7 @@
         }
 
         function buildAttendanceAuditEntry(previous, next, timestamp) {
-            const labels = { status: 'สถานะ', shift: 'กะเดิม (ข้อมูลเก่า)', checkIn: 'เวลาเริ่มงาน', checkOut: 'เวลาเลิกงาน', otHours: 'ชั่วโมง OT', otMultiplier: 'ตัวคูณ OT', note: 'หมายเหตุ' };
+            const labels = { status: 'สถานะ', shift: 'กะการทำงาน', checkIn: 'เวลาเริ่มงาน', checkOut: 'เวลาเลิกงาน', otHours: 'ชั่วโมง OT', otMultiplier: 'ตัวคูณ OT', note: 'หมายเหตุ' };
             if (!previous) return { action: 'create', at: timestamp, changes: [{ field: 'record', label: 'รายการ', from: '—', to: 'สร้างรายการ' }] };
             const changes = Object.keys(labels).filter(key => String(previous[key] ?? '') !== String(next[key] ?? '')).map(key => ({
                 field: key, label: labels[key], from: String(previous[key] ?? '—'), to: String(next[key] ?? '—')
@@ -1846,6 +1941,7 @@
                 document.getElementById('attDate').value = dateKey;
                 this.updateAttendanceDateLabel(dateKey);
                 document.getElementById('attStatus').value = record.status || 'PRESENT';
+                 this.setShiftRadios('attShift', record.shift || 'NONE'); this.updateShiftEnabled();
                 document.getElementById('attCheckIn').value = record.checkIn || lastTimes.checkIn || '';
                 document.getElementById('attCheckOut').value = record.checkOut || lastTimes.checkOut || '';
                 document.getElementById('attOtHours').value = record.otHours ?? 0;
@@ -1872,6 +1968,7 @@
                 const record = this.attendanceData[dateKey];
                 const lastTimes = this.readLocalJson('salary_last_attendance_times', {});
                 document.getElementById('attStatus').value = record?.status || 'PRESENT';
+                 this.setShiftRadios('attShift', record?.shift || 'NONE'); this.updateShiftEnabled();
                 document.getElementById('attCheckIn').value = record?.checkIn || lastTimes.checkIn || '';
                 document.getElementById('attCheckOut').value = record?.checkOut || lastTimes.checkOut || '';
                 document.getElementById('attOtHours').value = record?.otHours ?? 0;
@@ -1892,7 +1989,7 @@
                 const previous = this.attendanceData[dateKey] ? JSON.parse(JSON.stringify(this.attendanceData[dateKey])) : null;
                 const record = {
                     status: document.getElementById('attStatus').value,
-                    shift: previous?.shift || 'NONE',
+                    shift: (document.getElementById('attStatus').value === 'PRESENT' ? (document.querySelector('input[name="attShift"]:checked')?.value || previous?.shift) : 'NONE') || 'NONE',
                     checkIn: document.getElementById('attCheckIn').value,
                     checkOut: document.getElementById('attCheckOut').value,
                     otHours: parseFloat(document.getElementById('attOtHours').value) || 0,
@@ -1991,7 +2088,7 @@
                 if (!dateKey || !mode) return;
                 const previous = this.attendanceData[dateKey] ? JSON.parse(JSON.stringify(this.attendanceData[dateKey])) : {};
                 const record = {
-                    status: previous.status || 'PRESENT', shift: previous.shift || 'NONE',
+                    status: previous.status || 'PRESENT', shift: (mode === 'checkin' ? document.querySelector('input[name="quickShift"]:checked')?.value : '') || previous.shift || 'NONE',
                     checkIn: previous.checkIn || '', checkOut: previous.checkOut || '',
                     otHours: Number(previous.otHours) || 0, otMultiplier: Number(previous.otMultiplier ?? 1.5),
                     scheduledStart: previous.scheduledStart || '', scheduledEnd: previous.scheduledEnd || '',
@@ -2080,7 +2177,7 @@
                         otByMultiplier[bucket] += hours;
                         totalOtHours += hours;
                     }
-                    // Keep historical shift allowances from legacy records only; new records have no preset shift selector.
+                    // Shift allowance: กะเช้า 32฿ / กะบ่าย 48฿ / กะปกติ 0฿ from the shift chosen on each day.
                     if (rec.shift === 'MORNING') legacyMorning++;
                     if (rec.shift === 'AFTERNOON') legacyAfternoon++;
                 });
@@ -2104,7 +2201,7 @@
                 this.calculate();
                 this.scheduleCalculatorStateSave();
                 this.switchTab('calculator');
-                alert(`ดึงข้อมูลประจำเดือน ${thaiMonths[month]} ${year + 543} เรียบร้อยแล้ว:\n- วันทำงาน: ${workDaysCount} วัน\n- ชั่วโมงทำงานจากเวลาเข้า-ออก: ${Math.round(totalWorkHours * 100) / 100} ชม. (ไม่หักพัก)\n- ค่าเข้ากะจากข้อมูลเก่า: ${totalShiftAllowance} บาท\n- OT ×1.5: ${otByMultiplier['1.5']} ชม.\n- OT ×2: ${otByMultiplier['2']} ชม.\n- OT ×3: ${otByMultiplier['3']} ชม.\n- ชั่วโมง OT รวม: ${totalOtHours} ชม.\n- รายการที่ควรตรวจสอบ: ${warningCount} รายการ\n\nระบบนำ OT แต่ละตัวคูณไปคำนวณด้วยสูตรฐาน OT เดิมแล้ว`);
+                alert(`ดึงข้อมูลประจำเดือน ${thaiMonths[month]} ${year + 543} เรียบร้อยแล้ว:\n- วันทำงาน: ${workDaysCount} วัน\n- ชั่วโมงทำงานจากเวลาเข้า-ออก: ${Math.round(totalWorkHours * 100) / 100} ชม. (ไม่หักพัก)\n- ค่าเข้ากะ (เช้า ${legacyMorning} / บ่าย ${legacyAfternoon}): ${totalShiftAllowance} บาท\n- OT ×1.5: ${otByMultiplier['1.5']} ชม.\n- OT ×2: ${otByMultiplier['2']} ชม.\n- OT ×3: ${otByMultiplier['3']} ชม.\n- ชั่วโมง OT รวม: ${totalOtHours} ชม.\n- รายการที่ควรตรวจสอบ: ${warningCount} รายการ\n\nระบบนำ OT แต่ละตัวคูณไปคำนวณด้วยสูตรฐาน OT เดิมแล้ว`);
             }
 
             /* --- Payslip & History --- */
@@ -2588,7 +2685,7 @@
                 setText('dxNet', f(r.netSalary));
                 setText('dxIncome', f(r.totalIncome));
                 setText('dxDeduction', f(r.totalDeduction));
-                setText('dxIncomeSub', `รายวัน ${f(r.totalDailyIncome)} · OT ${f(r.otPay)}`);
+                setText('dxIncomeSub', `รายวัน ${f(r.totalDailyIncome)}${v.shiftAllowance > 0 ? ' · ค่ากะ ' + f(v.shiftAllowance) : ''} · OT ${f(r.otPay)}`);
                 setText('dxDeductionSub', `ประกันสังคม ${f(v.socialSecurity)} · สำรองชีพ ${f(r.tax)}`);
                 setText('dxOtHours', trim(r.otHoursTotal));
                 setText('dxOtSub', `ค่า OT ${f(r.otPay)} ฿ · อัตรา ${f(r.otRate)} ฿/ชม.`);
@@ -2738,12 +2835,239 @@
         })();
 
 
+        
+        /* ============================================================
+           v4.1: toast notifications, 6-month trend, month-over-month delta,
+           forgot-check-out reminder, deep links (#checkin / #checkout / #calendar ...)
+           ============================================================ */
+        (function () {
+            const P = SalaryApp.prototype;
+            const $ = id => document.getElementById(id);
+            const pad = n => String(n).padStart(2, '0');
+            const monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+            const monthShort = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+            const keyParts = key => key.split('-').map(Number);
+            const longLabel = key => { const [y, m] = keyParts(key); return `${monthNames[m - 1]} ${y + 543}`; };
+            const shortLabel = key => { const [y, m] = keyParts(key); return `${monthShort[m - 1]} ${String(y + 543).slice(-2)}`; };
+
+            /* ---------- Toasts (replace blocking alert(); confirm() is left native so original flows stay synchronous) ---------- */
+            const nativeAlert = window.alert.bind(window);
+            window.toast = function (message, type) {
+                let host = $('toastHost');
+                if (!host) {
+                    host = document.createElement('div');
+                    host.id = 'toastHost'; host.className = 'toast-host';
+                    host.setAttribute('aria-live', 'polite');
+                    document.body.appendChild(host);
+                }
+                const icons = { success: 'fa-circle-check', error: 'fa-circle-exclamation', warn: 'fa-triangle-exclamation' };
+                const t = document.createElement('div');
+                t.className = 'toast'; t.dataset.type = type || 'success';
+                t.setAttribute('role', type === 'error' ? 'alert' : 'status');
+                const icon = document.createElement('i'); icon.className = 'fa-solid ' + (icons[type] || icons.success); icon.setAttribute('aria-hidden', 'true');
+                const text = document.createElement('span'); text.textContent = String(message);
+                t.append(icon, text);
+                const remove = () => { t.remove(); };
+                t.addEventListener('click', remove);
+                host.appendChild(t);
+                while (host.children.length > 3) host.firstChild.remove();
+                setTimeout(remove, type === 'error' ? 7000 : 4200);
+            };
+            window.alert = function (message) {
+                const text = String(message == null ? '' : message);
+                if (text.length > 160 || text.split('\n').length > 4) { nativeAlert(text); return; }
+                const type = /ไม่สำเร็จ|ผิดพลาด|ล้มเหลว|ไม่สามารถ/.test(text) ? 'error'
+                           : /กรุณา|ควรตรวจสอบ|ไม่พบ|ตรวจสอบ/.test(text) ? 'warn' : 'success';
+                window.toast(text, type);
+            };
+
+            /* ---------- 6-month trend on dashboard (latest saved slip per month) ---------- */
+            P.renderTrend = function () {
+                const el = $('dxTrend'); if (!el) return;
+                const now = new Date();
+                const keys = [];
+                for (let o = 5; o >= 0; o--) { const d = new Date(now.getFullYear(), now.getMonth() - o, 1); keys.push(`${d.getFullYear()}-${pad(d.getMonth() + 1)}`); }
+                const latest = {};
+                (this.salaryHistory || []).forEach(r => {
+                    const k = this.monthKeyFromPeriod(r.period); if (!k) return;
+                    if (!latest[k] || (Number(r.id) || 0) > (Number(latest[k].id) || 0)) latest[k] = r;
+                });
+                const data = keys.map(k => ({ key: k, income: Number(latest[k]?.totalIncome) || 0, net: Number(latest[k]?.netSalary) || 0, has: !!latest[k] }));
+                const note = $('dxTrendNote');
+                if (!data.some(d => d.has)) {
+                    el.removeAttribute('role'); el.removeAttribute('aria-label');
+                    el.innerHTML = '<p class="dx-empty">ยังไม่มีสลิปใน 6 เดือนล่าสุด<br>กด “บันทึกข้อมูล” ที่การ์ดเงินเดือนสุทธิ เพื่อเริ่มดูแนวโน้ม</p>';
+                    if (note) note.textContent = '';
+                    return;
+                }
+                const max = Math.max(1, ...data.map(d => Math.max(d.income, d.net)));
+                const fmt = n => this.formatNumber(n);
+                el.setAttribute('role', 'img');
+                el.setAttribute('aria-label', 'แนวโน้มรายได้ 6 เดือน: ' + data.map(d => `${longLabel(d.key)} ${d.has ? 'สุทธิ ' + fmt(d.net) + ' บาท' : 'ไม่มีสลิป'}`).join(', '));
+                const thisKey = keys[keys.length - 1];
+                el.innerHTML = data.map(d => `<div class="col ${d.has ? '' : 'empty'} ${d.key === thisKey ? 'now' : ''}" title="${longLabel(d.key)}${d.has ? ' · รายรับ ' + fmt(d.income) + ' · สุทธิ ' + fmt(d.net) + ' ฿' : ' · ไม่มีสลิป'}">
+                    <div class="bars"><i class="inc" style="height:${d.has ? Math.max(2, Math.round(d.income / max * 100)) : 2}%"></i><i class="net" style="height:${d.has ? Math.max(2, Math.round(d.net / max * 100)) : 2}%"></i></div>
+                    <small>${shortLabel(d.key)}</small></div>`).join('');
+                const last = [...data].reverse().find(d => d.has);
+                if (note && last) note.textContent = `ล่าสุด ${longLabel(last.key)}: รายรับ ${fmt(last.income)} ฿ · สุทธิ ${fmt(last.net)} ฿`;
+            };
+
+            /* ---------- Month-over-month change under the net figure ---------- */
+            P.renderDelta = function (r) {
+                const el = $('dxDelta'); if (!el) return;
+                r = r || this._lastCalc;
+                if (!r || !r.v) { el.hidden = true; return; }
+                const key = this.monthKeyFromPeriod(r.v.period);
+                if (!key) { el.hidden = true; return; }
+                const [y, m] = keyParts(key);
+                const pd = new Date(y, m - 2, 1);
+                const prevKey = `${pd.getFullYear()}-${pad(pd.getMonth() + 1)}`;
+                const prev = (this.salaryHistory || []).filter(x => this.monthKeyFromPeriod(x.period) === prevKey)
+                    .reduce((a, b) => (!a || (Number(b.id) || 0) > (Number(a.id) || 0)) ? b : a, null);
+                if (!prev) { el.hidden = true; return; }
+                const diff = (Number(r.netSalary) || 0) - (Number(prev.netSalary) || 0);
+                const amount = this.formatNumber(Math.abs(diff));
+                el.hidden = false;
+                el.innerHTML = Math.abs(diff) < 0.005
+                    ? `เทียบ${longLabel(prevKey)}: <b>เท่ากัน</b>`
+                    : `เทียบ${longLabel(prevKey)}: <i class="fa-solid ${diff > 0 ? 'fa-arrow-trend-up up' : 'fa-arrow-trend-down down'}" aria-hidden="true"></i> ${diff > 0 ? 'สูงกว่า' : 'ต่ำกว่า'} <b>${amount} ฿</b>`;
+            };
+
+            /* ---------- Forgot-check-out reminder ---------- */
+            P.renderPunchAlert = function () {
+                const rec = (this.attendanceData && this.attendanceData[this.getTodayKey()]) || {};
+                let msg = '';
+                if (rec.checkIn && !rec.checkOut && rec.scheduledStart && rec.scheduledEnd) {
+                    const toMin = t => { const [h, m] = String(t).split(':').map(Number); return (h || 0) * 60 + (m || 0); };
+                    const inM = toMin(rec.checkIn), startM = toMin(rec.scheduledStart);
+                    let endM = toMin(rec.scheduledEnd); if (endM <= startM) endM += 1440;
+                    const d = new Date();
+                    let elapsed = d.getHours() * 60 + d.getMinutes() - inM; if (elapsed < 0) elapsed += 1440;
+                    const plan = endM - inM;
+                    const over = elapsed - plan;
+                    if (plan > 0 && plan <= 1440 && over >= 15) {
+                        const text = over >= 60 ? `${Math.floor(over / 60)} ชม. ${over % 60} นาที` : `${over} นาที`;
+                        msg = `เลยเวลาเลิกกะ ${rec.scheduledEnd} น. มาแล้ว ${text} ถ้าเลิกงานแล้วอย่าลืม Check Out`;
+                    }
+                }
+                document.querySelectorAll('[data-punch-alert]').forEach(el => {
+                    el.hidden = !msg;
+                    const t = el.querySelector('[data-alert-text]'); if (t) t.textContent = msg;
+                });
+            };
+
+            /* ---------- Hooks ---------- */
+            const origDash = P.renderDashboard;
+            P.renderDashboard = function (r) { this._lastCalc = r; origDash.apply(this, arguments); try { this.renderDelta(r); } catch (e) { console.warn(e); } };
+            const origShortcuts = P.renderDashboardShortcuts;
+            P.renderDashboardShortcuts = function () { origShortcuts.apply(this, arguments); try { this.renderTrend(); this.renderDelta(); } catch (e) { console.warn(e); } };
+            const origPunch = P.renderPunchStatus;
+            P.renderPunchStatus = function () { origPunch.apply(this, arguments); try { this.renderPunchAlert(); } catch (e) { console.warn(e); } };
+        })();
+
+        
+        /* ============================================================
+           v4.2: shift selection (กะปกติ 0฿ / กะเช้า 32฿ / กะบ่าย 48฿)
+           Stored in the existing record.shift field (NONE / MORNING / AFTERNOON),
+           so the calendar badges, monthly stats, reports and CSV keep working.
+           ============================================================ */
+        (function () {
+            const P = SalaryApp.prototype;
+            const $ = id => document.getElementById(id);
+            const SHIFT = {
+                NONE:      { label: 'กะปกติ', pay: 0 },
+                MORNING:   { label: 'กะเช้า', pay: 32 },
+                AFTERNOON: { label: 'กะบ่าย', pay: 48 }
+            };
+            const shiftText = key => { const s = SHIFT[key] || SHIFT.NONE; return `${s.label} · ${s.pay > 0 ? '+' : ''}${s.pay} ฿`; };
+            const lastShift = () => { try { const v = localStorage.getItem('salary_last_shift'); return SHIFT[v] ? v : 'NONE'; } catch (e) { return 'NONE'; } };
+
+            P.setShiftRadios = function (name, value) {
+                const v = SHIFT[value] ? value : 'NONE';
+                document.querySelectorAll(`input[name="${name}"]`).forEach(r => { r.checked = (r.value === v); });
+            };
+            P.updateShiftEnabled = function () {
+                const status = $('attStatus')?.value;
+                const on = !status || status === 'PRESENT';
+                const group = $('attShiftGroup'); if (group) group.disabled = !on;
+                const note = $('attShiftNote'); if (note) note.hidden = on;
+            };
+
+            /* Shift allowance of the month shown in the calculator -> "ค่าเข้ากะรวม" -> total income */
+            P.syncShiftAllowance = function () {
+                const key = this.monthKeyFromPeriod($('payPeriod')?.value);
+                if (!key) return;
+                let morning = 0, afternoon = 0;
+                Object.keys(this.attendanceData || {}).forEach(date => {
+                    if (!date.startsWith(key)) return;
+                    const shift = this.attendanceData[date]?.shift;
+                    if (shift === 'MORNING') morning++;
+                    if (shift === 'AFTERNOON') afternoon++;
+                });
+                const total = morning * SHIFT.MORNING.pay + afternoon * SHIFT.AFTERNOON.pay;
+                const input = $('shiftAllowance');
+                if (!input || Number(input.value) === total) return;
+                input.value = total;
+                this.calculate();
+                this.scheduleCalculatorStateSave();
+            };
+
+            /* Check-in modal: preselect today's shift, else the last one used */
+            const origCheckIn = P.quickTodayCheckIn;
+            P.quickTodayCheckIn = function () {
+                origCheckIn.apply(this, arguments);
+                const rec = this.attendanceData[this.getTodayKey()];
+                this.setShiftRadios('quickShift', rec && rec.checkIn ? rec.shift : lastShift());
+            };
+
+            /* Remember the chosen shift, then keep the calculator in step after every save/delete */
+            ['saveQuickAttendance', 'saveAttendanceRecord', 'deleteAttendanceRecord'].forEach(name => {
+                const orig = P[name];
+                P[name] = async function () {
+                    if (name === 'saveQuickAttendance' && this.quickAttendanceMode === 'checkin') {
+                        const v = document.querySelector('input[name="quickShift"]:checked')?.value;
+                        if (SHIFT[v]) { try { localStorage.setItem('salary_last_shift', v); } catch (e) { /* ignore */ } }
+                    }
+                    const pending = orig.apply(this, arguments);
+                    // Local save happens synchronously before the first await in the originals; sync right away.
+                    try { this.syncShiftAllowance(); } catch (e) { console.warn(e); }
+                    const result = await pending;
+                    try { this.syncShiftAllowance(); } catch (e) { console.warn(e); }
+                    return result;
+                };
+            });
+
+            /* Today's shift on the dashboard punch card + sheet */
+            const origPunchStatus = P.renderPunchStatus;
+            P.renderPunchStatus = function () {
+                origPunchStatus.apply(this, arguments);
+                const rec = this.attendanceData && this.attendanceData[this.getTodayKey()];
+                const text = rec && (rec.checkIn || rec.shift && rec.shift !== 'NONE') ? shiftText(rec.shift) : 'ยังไม่ได้เลือก (นับเป็นกะปกติ)';
+                document.querySelectorAll('[data-punch-shift]').forEach(el => { el.textContent = text; });
+            };
+
+            const origCalcAfter = P.renderDashboardShortcuts;
+            P.renderDashboardShortcuts = function () {
+                origCalcAfter.apply(this, arguments);
+                const el = $('dxCalMeta'); const allowance = $('calStatShiftAllowance')?.textContent;
+                if (el && allowance && !/^0\s*฿/.test(allowance)) el.textContent += ` · ค่ากะ ${allowance}`;
+            };
+
+        })();
+
         const app = new SalaryApp();
         app.applyTheme(document.documentElement.getAttribute('data-theme'), false);
         app.renderClock();
         setInterval(() => app.renderClock(), 1000);
         app.switchTab('dashboard');
+        document.getElementById('attStatus')?.addEventListener('change', () => app.updateShiftEnabled());
         document.addEventListener('keydown', e => { if (e.key === 'Escape') app.closePunchSheet(); });
+        (function handleDeepLink() {
+            const h = (location.hash || '').replace('#', '');
+            if (h === 'checkin') app.quickTodayCheckIn();
+            else if (h === 'checkout') app.quickTodayCheckOut();
+            else if (['calendar', 'calculator', 'history', 'reports'].includes(h)) app.switchTab(h);
+        })();
     </script>
 </body>
 </html>
